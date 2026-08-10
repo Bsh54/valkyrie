@@ -1,0 +1,15 @@
+{
+  "artemisinin": "O=C1OC2(OO3)C(C)CCC3C2CC4C(C)=CCC1C4C",
+  "quinine": "COc1ccc2nccc([C@@H](O)[C@H]3CC4CCN3CC4=C)c2c1",
+  "curcumin": "O=C(\\C=C\\c1ccc(O)c(OC)c1)CC(=O)\\C=C\\c1ccc(O)c(OC)c1",
+  "berberine": "COc1ccc2cc3[n+](cc2c1OC)CCc1cc2OCOc2cc1-3",
+  "emetine": "CCC1CN2CCc3cc(OC)c(OC)cc3C2CC1CC1NCCc2cc(OC)c(OC)cc21",
+  "chloroquine": "CCN(CC)CCCC(C)Nc1ccnc2cc(Cl)ccc12",
+  "dihydroartemisinin": "O[C@@H]1OC2(OO3)C(C)CCC3C2CC4C(C)=CCC1C4C",
+  "luteolin": "Oc1cc(O)c2c(c1)oc(-c1ccc(O)c(O)c1)cc2=O",
+  "catechin": "Oc1cc(O)c2c(c1)O[C@@H](c1ccc(O)c(O)c1)[C@H](O)C2",
+  "piperine": "O=C(/C=C/C=C/c1ccc2c(c1)OCO2)N1CCCCC1",
+  "pyrimethamine": "c1ccc(c(c1)Cl)c2cnc(nc2N)N",
+  "glucose": "OC[C@H]1OC(O)[C@H](O)[C@@H](O)[C@@H]1O",
+  "ethanol": "CCO"
+}

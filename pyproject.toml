@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests that invoke Vina (deselect with '-m \"not slow\"')",
+    "property: marks property-based Hypothesis tests",
+]
+testpaths = ["tests"]
