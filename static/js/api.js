@@ -1,42 +1,58 @@
 const API = {
-    async getTargets() {
-        const r = await fetch('/api/targets');
-        if (!r.ok) throw new Error('Failed to load targets');
-        return r.json();
+    async _get(path) {
+        const response = await fetch(path);
+        if (!response.ok) {
+            throw new Error(await this._message(response));
+        }
+        return response.json();
+    },
+
+    async _message(response) {
+        try {
+            const body = await response.json();
+            const detail = body.detail;
+            if (typeof detail === 'string') return detail;
+            if (detail && detail.detail) return detail.detail;
+            return `Request failed (${response.status})`;
+        } catch {
+            return `Request failed (${response.status})`;
+        }
+    },
+
+    getTargets() {
+        return this._get('/api/targets');
     },
 
     async getCompounds() {
-        const r = await fetch('/api/compounds');
-        if (!r.ok) throw new Error('Failed to load compounds');
-        return r.json();
+        const body = await this._get('/api/compounds');
+        return body.compounds || [];
     },
 
-    async dock(molecule, targetId, exhaustiveness = 8) {
-        const r = await fetch('/api/dock', {
+    getBenchmarks() {
+        return this._get('/api/benchmarks');
+    },
+
+    getScreening(id) {
+        return this._get(`/api/screenings/${encodeURIComponent(id)}`);
+    },
+
+    async submitScreening(molecule, targetId, exhaustiveness) {
+        const response = await fetch('/api/screenings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ molecule, target_id: targetId, exhaustiveness }),
+            body: JSON.stringify({
+                molecule,
+                target_id: targetId,
+                exhaustiveness,
+            }),
         });
-        if (!r.ok) {
-            const err = await r.json();
-            throw new Error(err.detail?.detail || err.detail || 'Docking failed');
+        if (!response.ok) {
+            throw new Error(await this._message(response));
         }
-        return r.json();
-    },
-
-    async getResult(id) {
-        const r = await fetch(`/api/result/${id}`);
-        if (!r.ok) throw new Error('Result not found');
-        return r.json();
-    },
-
-    async getBenchmarks() {
-        const r = await fetch('/api/benchmarks');
-        if (!r.ok) throw new Error('Failed to load benchmarks');
-        return r.json();
+        return response.json();
     },
 
     reportUrl(id) {
-        return `/api/result/${id}/report`;
-    }
+        return `/api/screenings/${encodeURIComponent(id)}/report`;
+    },
 };

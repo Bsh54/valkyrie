@@ -249,7 +249,7 @@ python scripts/bench_external.py</pre>
         errorBox.innerHTML = '';
 
         try {
-            const data = await API.dock(mol, target, exh);
+            const data = await API.submitScreening(mol, target, exh);
             location.hash = `#/result/${data.result_id}`;
         } catch (e) {
             errorBox.innerHTML = `<div class="error-box">${e.message}</div>`;
@@ -265,7 +265,7 @@ python scripts/bench_external.py</pre>
 
         let data;
         try {
-            data = await API.getResult(id);
+            data = await API.getScreening(id);
         } catch (e) {
             this.root.innerHTML = `
                 <div class="card">
