@@ -15,6 +15,7 @@ from drugforge.errors import (
     PipelineError,
     ValidationError,
 )
+from drugforge.explainer import Explanation, generate_explanation
 from drugforge.ligand_prep import prepare_ligand
 from drugforge.receptor import get_receptor_pdbqt
 from drugforge.rescoring import rescore_vinardo
@@ -42,6 +43,7 @@ class PipelineResult:
     comparisons: list[Comparison]
     verdict: str
     boltz: Optional[BoltzResult] = None
+    explanation: Optional[Explanation] = None
 
     def to_dict(self) -> dict:
         return {
@@ -60,6 +62,7 @@ class PipelineResult:
             "comparisons": [c.to_dict() for c in self.comparisons],
             "verdict": self.verdict,
             "boltz": self.boltz.to_dict() if self.boltz else None,
+            "explanation": self.explanation.to_dict() if self.explanation else None,
         }
 
 
@@ -199,6 +202,26 @@ def run_docking_pipeline(
             pose_sdf=docking_result.best_pose_sdf,
         )
 
+    # Stage 10: AI explanation (DeepSeek, optional)
+    explanation_result = None
+    try:
+        # Build a partial result dict for the explainer prompt
+        partial_result = {
+            "molecule_smiles": smiles,
+            "target_id": target_id,
+            "affinity_kcal_mol": docking_result.best_affinity,
+            "vinardo_score": vinardo_score,
+            "consensus_score": consensus_result.consensus_score,
+            "verdict": verdict,
+            "is_hit": hit,
+            "drug_likeness": drug_likeness.to_dict(),
+            "admet": admet_result.to_dict(),
+            "comparisons": [c.to_dict() for c in comparisons],
+        }
+        explanation_result = generate_explanation(partial_result, target_id)
+    except Exception as e:
+        logger.warning(f"AI explanation failed (non-fatal): {e}")
+
     return PipelineResult(
         molecule_smiles=smiles,
         target_id=target_id,
@@ -215,4 +238,5 @@ def run_docking_pipeline(
         comparisons=comparisons,
         verdict=verdict,
         boltz=boltz_result,
+        explanation=explanation_result,
     )
