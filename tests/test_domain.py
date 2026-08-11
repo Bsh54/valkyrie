@@ -1,5 +1,7 @@
 """Domain models and the target registry."""
 
+import dataclasses
+
 import pytest
 
 from drugforge.domain.models import IN_SILICO_DISCLAIMER, DockingBox, Target
@@ -29,7 +31,7 @@ def test_unknown_target_names_the_alternatives():
 
 def test_targets_are_immutable():
     target = get_target("pf-dhfr")
-    with pytest.raises(Exception):
+    with pytest.raises(dataclasses.FrozenInstanceError):
         target.id = "mutated"
 
 

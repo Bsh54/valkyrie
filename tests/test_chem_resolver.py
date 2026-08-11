@@ -1,5 +1,6 @@
 """Molecule resolution and input validation."""
 
+import contextlib
 from unittest.mock import patch
 
 import pytest
@@ -65,8 +66,8 @@ def test_validator_rejects_non_strings():
     ["", " ", "\t", "!!!", "a" * 600, "C" * 200 + "INVALID", "\x00\x01"],
 )
 def test_validator_never_leaks_other_exceptions(value):
-    with patch("drugforge.chem.resolver._lookup_pubchem", return_value=None):
-        try:
-            validate_molecule(value)
-        except ValidationError:
-            pass
+    with (
+        patch("drugforge.chem.resolver._lookup_pubchem", return_value=None),
+        contextlib.suppress(ValidationError),
+    ):
+        validate_molecule(value)

@@ -4,11 +4,9 @@ from __future__ import annotations
 
 import logging
 import tempfile
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator, Optional
-
-from rdkit import Chem
 
 from drugforge.chem.molblock import Atom, apply_template, build_mol_from_atoms, to_mol_block
 from drugforge.config import N_POSES, VINA_CPU
@@ -33,13 +31,16 @@ _AUTODOCK_ELEMENTS = {
 
 @contextmanager
 def _temporary_pdbqt(content: str = "") -> Iterator[Path]:
-    handle = tempfile.NamedTemporaryFile(mode="w", suffix=".pdbqt", delete=False)
-    try:
+    """Provide a PDBQT path for Vina, which only accepts files, then clean up."""
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".pdbqt", delete=False
+    ) as handle:
         handle.write(content)
-        handle.close()
-        yield Path(handle.name)
+        path = Path(handle.name)
+    try:
+        yield path
     finally:
-        Path(handle.name).unlink(missing_ok=True)
+        path.unlink(missing_ok=True)
 
 
 def _element_for(line: str) -> str:
@@ -86,7 +87,7 @@ def first_model_only(pdbqt: str) -> str:
     return "\n".join(lines) + "\n" if lines else pdbqt
 
 
-def pose_to_mol_block(pdbqt: str, template_smiles: Optional[str] = None) -> str:
+def pose_to_mol_block(pdbqt: str, template_smiles: str | None = None) -> str:
     """Convert a docked pose into an SDF mol block for 3D display."""
     atoms = parse_first_model(pdbqt)
     if not atoms:
@@ -108,7 +109,7 @@ def dock(
     box: DockingBox,
     exhaustiveness: int,
     n_poses: int = N_POSES,
-    template_smiles: Optional[str] = None,
+    template_smiles: str | None = None,
 ) -> DockingResult:
     """Dock a prepared ligand into a prepared receptor."""
     try:

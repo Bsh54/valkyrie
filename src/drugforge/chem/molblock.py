@@ -7,7 +7,6 @@ perceived from interatomic distances.
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 from rdkit import Chem
 
@@ -16,7 +15,7 @@ logger = logging.getLogger(__name__)
 Atom = tuple[str, float, float, float]
 
 
-def build_mol_from_atoms(atoms: list[Atom]) -> Optional[Chem.Mol]:
+def build_mol_from_atoms(atoms: list[Atom]) -> Chem.Mol | None:
     """Create a molecule with a 3D conformer and perceived connectivity."""
     if not atoms:
         return None
@@ -59,7 +58,7 @@ def apply_template(mol: Chem.Mol, template_smiles: str) -> Chem.Mol:
         return mol
 
 
-def to_mol_block(mol: Optional[Chem.Mol]) -> str:
+def to_mol_block(mol: Chem.Mol | None) -> str:
     """Serialise to an SDF mol block, tolerating imperfect valences."""
     if mol is None:
         return ""

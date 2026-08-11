@@ -2,11 +2,11 @@
 
 import pytest
 from rdkit import Chem
+from tests.conftest import PYRIMETHAMINE_SMILES
 
 from drugforge.chem.admet import compute_admet, evaluate_hit, predict_esol
 from drugforge.chem.descriptors import compute_drug_likeness
 from drugforge.domain.models import DrugLikeness
-from tests.conftest import PYRIMETHAMINE_SMILES
 
 RHODANINE = "O=C1CSC(=S)N1"
 ACROLEIN = "C=CC=O"

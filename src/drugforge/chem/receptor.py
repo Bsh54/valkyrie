@@ -54,15 +54,20 @@ def download_structure(pdb_id: str, destination: Path) -> None:
     logger.info("Downloaded %s to %s", pdb_id, destination)
 
 
+_STRUCTURAL_RECORDS = {"TER", "END"}
+
+
+def _is_protein_atom(line: str) -> bool:
+    return line[:6].strip() == "ATOM" and line[17:20].strip() not in _SOLVENT_RESIDUES
+
+
 def strip_solvent_and_ligands(pdb_text: str) -> str:
     """Keep protein ATOM records only, dropping water and heteroatoms."""
-    kept = []
-    for line in pdb_text.splitlines():
-        record = line[:6].strip()
-        if record == "ATOM" and line[17:20].strip() not in _SOLVENT_RESIDUES:
-            kept.append(line)
-        elif record in {"TER", "END"}:
-            kept.append(line)
+    kept = [
+        line
+        for line in pdb_text.splitlines()
+        if _is_protein_atom(line) or line[:6].strip() in _STRUCTURAL_RECORDS
+    ]
 
     if not any(line.startswith("ATOM") for line in kept):
         raise ReceptorError("No protein ATOM records found in the structure.")

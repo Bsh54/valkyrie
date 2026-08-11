@@ -15,9 +15,11 @@ from drugforge.pipeline.runner import run_screening
 
 
 def test_invalid_molecule_fails_at_the_validation_stage():
-    with patch("drugforge.chem.resolver._lookup_pubchem", return_value=None):
-        with pytest.raises(PipelineError) as exc_info:
-            run_screening("not_a_molecule_zzz", "pf-dhfr")
+    with (
+        patch("drugforge.chem.resolver._lookup_pubchem", return_value=None),
+        pytest.raises(PipelineError) as exc_info,
+    ):
+        run_screening("not_a_molecule_zzz", "pf-dhfr")
     assert exc_info.value.stage == "validate"
 
 

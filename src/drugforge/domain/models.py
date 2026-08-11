@@ -7,7 +7,6 @@ Every user-facing result carries an explicit in-silico disclaimer.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Optional
 
 IN_SILICO_DISCLAIMER = (
     "In-silico prediction only. Not clinical evidence. "
@@ -147,10 +146,10 @@ class Comparison:
 class BoltzResult:
     """AI binding confirmation from the hosted Boltz-2 API."""
 
-    predicted_affinity: Optional[float] = None
-    confidence: Optional[float] = None
+    predicted_affinity: float | None = None
+    confidence: float | None = None
     status: str = "unavailable"
-    error_detail: Optional[str] = None
+    error_detail: str | None = None
     disclaimer: str = field(default=AI_AFFINITY_DISCLAIMER)
 
     def to_dict(self) -> dict:
@@ -163,7 +162,7 @@ class Explanation:
 
     text: str = ""
     status: str = "unavailable"
-    error_detail: Optional[str] = None
+    error_detail: str | None = None
     disclaimer: str = field(default=EXPLANATION_DISCLAIMER)
 
     def to_dict(self) -> dict:
@@ -188,10 +187,10 @@ class ScreeningResult:
     hit_failure_reasons: list[str]
     comparisons: list[Comparison]
     verdict: str
-    boltz: Optional[BoltzResult] = None
-    explanation: Optional[Explanation] = None
-    result_id: Optional[str] = None
-    timestamp: Optional[str] = None
+    boltz: BoltzResult | None = None
+    explanation: Explanation | None = None
+    result_id: str | None = None
+    timestamp: str | None = None
 
     def to_dict(self) -> dict:
         return {

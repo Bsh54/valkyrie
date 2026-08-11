@@ -10,7 +10,6 @@ from __future__ import annotations
 import json
 import logging
 from functools import lru_cache
-from typing import Optional
 
 from drugforge.config import ETHNOBOTANICAL_PATH
 
@@ -33,7 +32,7 @@ def list_compounds() -> list[dict]:
     return [dict(entry) for entry in _entries()]
 
 
-def get_compound(compound_id: str) -> Optional[dict]:
+def get_compound(compound_id: str) -> dict | None:
     for entry in _entries():
         if entry.get("id") == compound_id:
             return dict(entry)

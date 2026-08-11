@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
 
 from drugforge.domain.models import IN_SILICO_DISCLAIMER, ScreeningResult
 from drugforge.storage.database import connect
@@ -81,7 +80,7 @@ def _row_to_dict(row) -> dict:
     }
 
 
-def get(result_id: str) -> Optional[dict]:
+def get(result_id: str) -> dict | None:
     """Fetch one result by identifier."""
     with connect() as connection:
         row = connection.execute(
@@ -90,7 +89,7 @@ def get(result_id: str) -> Optional[dict]:
     return _row_to_dict(row) if row else None
 
 
-def latest_for(molecule_smiles: str, target_id: str) -> Optional[dict]:
+def latest_for(molecule_smiles: str, target_id: str) -> dict | None:
     """Fetch the most recent result for a molecule and target pair."""
     with connect() as connection:
         row = connection.execute(

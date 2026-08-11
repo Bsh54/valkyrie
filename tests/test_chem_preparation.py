@@ -3,6 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from tests.conftest import PYRIMETHAMINE_SMILES
 
 from drugforge.chem.ligand import prepare_ligand
 from drugforge.chem.receptor import (
@@ -12,7 +13,6 @@ from drugforge.chem.receptor import (
 )
 from drugforge.domain.targets import get_target
 from drugforge.errors import LigandPrepError, ReceptorError
-from tests.conftest import PYRIMETHAMINE_SMILES
 
 SAMPLE_PDB = """HEADER    TEST
 ATOM      1  N   ALA A   1      10.000  15.000  25.000  1.00  0.00           N

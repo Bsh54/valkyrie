@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 from drugforge.chem.descriptors import compute_drug_likeness
 from drugforge.chem.ligand import prepare_ligand
@@ -23,7 +22,7 @@ COMPARABLE_RATIO = 0.8
 
 _LOWER_IS_BETTER = {"affinity", "lipinski_violations"}
 
-_reference_cache: dict[str, "ReferenceBaseline"] = {}
+_reference_cache: dict[str, ReferenceBaseline] = {}
 
 
 class ReferenceBaseline:

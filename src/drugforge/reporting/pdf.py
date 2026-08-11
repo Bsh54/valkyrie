@@ -43,21 +43,32 @@ def build_report(result: dict) -> bytes:
     return bytes(pdf.output())
 
 
+def _block(pdf, text: str, height: float, **kwargs) -> None:
+    """Write a full-width block and return the cursor to the left margin.
+
+    fpdf2 leaves the cursor to the right of a multi_cell by default, which
+    starves the next full-width write of horizontal space.
+    """
+    from fpdf.enums import XPos, YPos
+
+    pdf.multi_cell(0, height, text, new_x=XPos.LMARGIN, new_y=YPos.NEXT, **kwargs)
+
+
 def _banner(pdf, text: str) -> None:
     pdf.set_fill_color(*_HIGHLIGHT)
     pdf.set_font("Helvetica", "B", 10)
-    pdf.multi_cell(0, 6, text, align="C", fill=True)
+    _block(pdf, text, 6, align="C", fill=True)
     pdf.ln(2)
 
 
 def _heading(pdf, text: str) -> None:
     pdf.set_font("Helvetica", "B", 12)
-    pdf.multi_cell(0, 7, text)
+    _block(pdf, text, 7)
 
 
 def _line(pdf, text: str) -> None:
     pdf.set_font("Helvetica", "", 10)
-    pdf.multi_cell(0, 5, text)
+    _block(pdf, text, 5)
 
 
 def _summary_page(pdf, result: dict) -> None:
@@ -65,7 +76,7 @@ def _summary_page(pdf, result: dict) -> None:
     _banner(pdf, _BANNER)
 
     pdf.set_font("Helvetica", "B", 16)
-    pdf.multi_cell(0, 10, "DrugForge screening report")
+    _block(pdf, "DrugForge screening report", 10)
     _line(pdf, f"Result: {result.get('result_id', 'not stored')}")
     _line(pdf, f"Generated: {result.get('timestamp', 'unknown')}")
     pdf.ln(3)
@@ -88,7 +99,7 @@ def _summary_page(pdf, result: dict) -> None:
             image_path.unlink(missing_ok=True)
 
     pdf.set_font("Helvetica", "B", 14)
-    pdf.multi_cell(0, 9, f"Verdict: {result.get('verdict', 'unknown')}")
+    _block(pdf, f"Verdict: {result.get('verdict', 'unknown')}", 9)
     pdf.ln(1)
 
     _heading(pdf, "Scores")
@@ -136,7 +147,7 @@ def _detail_page(pdf, result: dict) -> None:
     headers = ("Metric", "Molecule", "Reference", "Delta", "Verdict")
 
     pdf.set_font("Helvetica", "B", 9)
-    for width, header in zip(widths, headers):
+    for width, header in zip(widths, headers, strict=True):
         pdf.cell(width, 6, header, border=1)
     pdf.ln()
 
@@ -149,7 +160,7 @@ def _detail_page(pdf, result: dict) -> None:
             str(comparison.get("delta", "")),
             str(comparison.get("verdict", "")),
         )
-        for width, cell in zip(widths, cells):
+        for width, cell in zip(widths, cells, strict=True):
             pdf.cell(width, 5, cell, border=1)
         pdf.ln()
     pdf.ln(4)
@@ -172,10 +183,10 @@ def _detail_page(pdf, result: dict) -> None:
     if explanation.get("status") == "success" and explanation.get("text"):
         _heading(pdf, "Explanation")
         pdf.set_font("Helvetica", "I", 9)
-        pdf.multi_cell(0, 4, explanation["text"])
+        _block(pdf, explanation["text"], 4)
         pdf.ln(2)
         pdf.set_font("Helvetica", "", 8)
-        pdf.multi_cell(0, 4, explanation.get("disclaimer", ""))
+        _block(pdf, explanation.get("disclaimer", ""), 4)
         pdf.ln(2)
 
     _banner(pdf, IN_SILICO_DISCLAIMER)

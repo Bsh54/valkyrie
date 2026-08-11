@@ -16,6 +16,7 @@ from drugforge.domain.models import (
 from drugforge.domain.targets import TARGETS, get_target, list_targets
 
 __all__ = [
+    "TARGETS",
     "ADMETResult",
     "BoltzResult",
     "Comparison",
@@ -26,7 +27,6 @@ __all__ = [
     "Explanation",
     "ReferenceDrug",
     "ScreeningResult",
-    "TARGETS",
     "Target",
     "get_target",
     "list_targets",

@@ -6,8 +6,6 @@ no bond table for heteroatoms, so the ligand is rebuilt by distance perception.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from drugforge.chem.molblock import Atom, build_mol_from_atoms
 
 MIN_LIGAND_HEAVY_ATOMS = 6
@@ -26,7 +24,7 @@ _TWO_LETTER_ELEMENTS = {
 }
 
 
-def _element(line: str) -> Optional[str]:
+def _element(line: str) -> str | None:
     raw = line[76:78].strip().upper() if len(line) >= 78 else ""
     if not raw:
         raw = line[12:16].strip().upper()[:1]
@@ -62,7 +60,7 @@ def group_heteroatom_residues(pdb_text: str) -> dict[tuple[str, str, str], list[
     return residues
 
 
-def find_primary_ligand(pdb_text: str) -> Optional[tuple[str, list[Atom]]]:
+def find_primary_ligand(pdb_text: str) -> tuple[str, list[Atom]] | None:
     """Return the largest plausible ligand as (residue name, atoms)."""
     residues = group_heteroatom_residues(pdb_text)
     if not residues:

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import json
 import math
-from typing import Optional
 
 from drugforge.config import BENCHMARKS_DIR
 
@@ -26,7 +25,7 @@ RMSD_SUCCESS_THRESHOLD = 2.0
 
 def compute_auc(
     active_scores: list[float], inactive_scores: list[float]
-) -> Optional[float]:
+) -> float | None:
     """Probability that an active outranks an inactive; ties count as a half."""
     if not active_scores or not inactive_scores:
         return None
@@ -43,7 +42,7 @@ def compute_auc(
 
 def compute_enrichment_factor(
     scores: list[tuple[float, bool]], fraction: float
-) -> Optional[float]:
+) -> float | None:
     """Enrichment factor over the best-scoring fraction of a ranked list."""
     if not scores or not 0 < fraction <= 1:
         return None
@@ -60,7 +59,7 @@ def compute_enrichment_factor(
     return round((found / top_n) / (actives / total), 3)
 
 
-def compute_rmsd(probe, reference) -> Optional[float]:
+def compute_rmsd(probe, reference) -> float | None:
     """Symmetry-corrected heavy-atom RMSD between two poses."""
     if probe is None or reference is None:
         return None
@@ -76,7 +75,7 @@ def compute_rmsd(probe, reference) -> Optional[float]:
         return None
 
 
-def _read_artifact(name: str) -> Optional[dict]:
+def _read_artifact(name: str) -> dict | None:
     path = BENCHMARKS_DIR / f"{name}.json"
     if not path.exists():
         return None
