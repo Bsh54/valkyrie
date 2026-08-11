@@ -16,6 +16,7 @@ from drugforge.errors import (
     TargetNotFoundError,
     ValidationError,
 )
+from drugforge.library import get_compounds, get_compound
 from drugforge.pipeline import run_docking_pipeline
 from drugforge.store import get_result, save_result
 from drugforge.targets import TARGETS, get_target
@@ -170,6 +171,19 @@ def get_stored_result(result_id: str):
             detail={"error": "not_found", "detail": f"Result '{result_id}' not found."},
         )
     return result
+
+
+@app.get("/api/compounds")
+def list_compounds():
+    return get_compounds()
+
+
+@app.get("/api/compounds/{compound_id}")
+def get_compound_detail(compound_id: str):
+    compound = get_compound(compound_id)
+    if compound is None:
+        raise HTTPException(status_code=404, detail="Compound not found.")
+    return compound
 
 
 @app.get("/api/result/{result_id}/report")

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "cryptolepine",
+    "compound_name": "Cryptolepine",
+    "smiles": "Cn1c2ccccc2c2c1c1ccccc1[nH]2",
+    "plant": {
+      "scientific_name": "Cryptolepis sanguinolenta",
+      "local_name": "Nibima",
+      "family": "Apocynaceae"
+    },
+    "traditional_use": {
+      "disease": "Malaria, fever",
+      "region": "Ghana, West Africa",
+      "people": "Akan",
+      "preparation": "Aqueous decoction of roots",
+      "part_used": "Roots"
+    },
+    "source": "Boye GL, Ampofo O. Clinical uses of Cryptolepis sanguinolenta. Proceedings of the First International Seminar on Cryptolepine, 1983."
+  },
+  {
+    "id": "artemisinin",
+    "compound_name": "Artemisinin",
+    "smiles": "O=C1OC2(OO3)C(C)CCC3C2CC4C(C)=CCC1C4C",
+    "plant": {
+      "scientific_name": "Artemisia annua",
+      "local_name": "Qinghao / Umhlonyane (A. afra)",
+      "family": "Asteraceae"
+    },
+    "traditional_use": {
+      "disease": "Malaria, fever",
+      "region": "East and Southern Africa, China",
+      "people": "Various (documented since 340 AD in Chinese medicine)",
+      "preparation": "Infusion of fresh leaves",
+      "part_used": "Leaves"
+    },
+    "source": "Klayman DL. Qinghaosu (artemisinin): an antimalarial drug from China. Science 1985;228:1049-55."
+  },
+  {
+    "id": "khaya-limonoid",
+    "compound_name": "Gedunin",
+    "smiles": "O=C1OC2(C)CC3C(C)(C1)C(OC(=O)C)CC1C3(C)CCC3C1(C)CCC(=O)C3(C)C=C2",
+    "plant": {
+      "scientific_name": "Khaya senegalensis",
+      "local_name": "Madaci (Hausa) / Caicedrat",
+      "family": "Meliaceae"
+    },
+    "traditional_use": {
+      "disease": "Malaria, fever, jaundice",
+      "region": "West Africa (Sahel)",
+      "people": "Hausa, Bambara",
+      "preparation": "Aqueous decoction of stem bark",
+      "part_used": "Stem bark"
+    },
+    "source": "Bickii J et al. Antimalarial activity of Khaya senegalensis bark extract. J Ethnopharmacol 2000;69:27-33."
+  },
+  {
+    "id": "reserpine",
+    "compound_name": "Reserpine",
+    "smiles": "COc1ccc2c(c1)[nH]c1c2CCN2CC3CC(OC(=O)c4cc(OC)c(OC)c(OC)c4)C(C2)C1CC3OC(=O)OC",
+    "plant": {
+      "scientific_name": "Rauvolfia vomitoria",
+      "local_name": "Asofeyeje (Yoruba)",
+      "family": "Apocynaceae"
+    },
+    "traditional_use": {
+      "disease": "Malaria, mental illness, hypertension",
+      "region": "West Africa (Nigeria, Cameroon)",
+      "people": "Yoruba, Igbo",
+      "preparation": "Aqueous decoction of roots",
+      "part_used": "Roots"
+    },
+    "source": "Okunade AL. Ageratum conyzoides L. (Asteraceae). Fitoterapia 2002;73:1-16. / Obonga WO et al. J Pharm Bioresour 2014."
+  },
+  {
+    "id": "strictosamide",
+    "compound_name": "Strictosamide",
+    "smiles": "O=C1OCCC2C1CC1C(=CO)C(OC3OC(CO)C(O)C(O)C3O)=CC3C1NC1=CC=CC=C1N23",
+    "plant": {
+      "scientific_name": "Nauclea latifolia",
+      "local_name": "Bati (Mandinka) / Egbesi (Yoruba)",
+      "family": "Rubiaceae"
+    },
+    "traditional_use": {
+      "disease": "Malaria, fever, diarrhoea",
+      "region": "West Africa (Senegal to Nigeria)",
+      "people": "Mandinka, Yoruba, Fula",
+      "preparation": "Aqueous decoction of stem bark",
+      "part_used": "Stem bark, roots"
+    },
+    "source": "Abbah J et al. Antimalarial activity of Nauclea latifolia. J Ethnopharmacol 2010;131:61-67."
+  }
+]
