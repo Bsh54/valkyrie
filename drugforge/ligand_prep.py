@@ -29,9 +29,14 @@ def prepare_ligand(smiles: str) -> tuple:
         LigandPrepError on any preparation failure.
     """
     # Step 1: Parse
+    if not smiles or not smiles.strip():
+        raise LigandPrepError("Empty SMILES string.")
+
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         raise LigandPrepError(f"Could not parse SMILES: {smiles}")
+    if mol.GetNumAtoms() == 0:
+        raise LigandPrepError(f"SMILES has no atoms: {smiles}")
 
     # Step 2: Add hydrogens
     mol = Chem.AddHs(mol)
@@ -61,17 +66,22 @@ def prepare_ligand(smiles: str) -> tuple:
     try:
         preparator = MoleculePreparation()
         mol_setups = preparator.prepare(mol)
-        # Get PDBQT string from the first setup
-        pdbqt_lines = []
-        for setup in mol_setups:
-            pdbqt_string = setup.write_pdbqt_string()
-            pdbqt_lines.append(pdbqt_string)
-            break  # only need first conformer
 
-        if not pdbqt_lines:
-            raise LigandPrepError("Meeko produced no PDBQT output.")
+        if not mol_setups:
+            raise LigandPrepError("Meeko produced no molecule setups.")
 
-        pdbqt_string = pdbqt_lines[0]
+        # Use PDBQTWriterLegacy for Meeko >= 0.5
+        try:
+            from meeko import PDBQTWriterLegacy
+            pdbqt_string, is_ok, err = PDBQTWriterLegacy.write_string(mol_setups[0])
+            if not is_ok:
+                raise LigandPrepError(f"PDBQT writing failed: {err}")
+        except ImportError:
+            # Fallback for older Meeko versions
+            pdbqt_string = preparator.write_pdbqt_string()
+
+        if not pdbqt_string:
+            raise LigandPrepError("Meeko produced empty PDBQT output.")
     except LigandPrepError:
         raise
     except Exception as e:

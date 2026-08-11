@@ -21,34 +21,39 @@ END
 """
 
 
-def test_prepare_receptor_strips_water_and_heteroatoms(tmp_path):
-    """Preparation should strip water and heteroatoms."""
+@patch("drugforge.receptor.subprocess.run")
+def test_prepare_receptor_strips_water_and_heteroatoms(mock_run, tmp_path):
+    """Preparation should strip water and heteroatoms in the cleaned PDB."""
+    mock_run.return_value = MagicMock(returncode=0, stderr="")
     pdb_file = tmp_path / "test.pdb"
     pdb_file.write_text(SAMPLE_PDB)
     pdbqt_file = tmp_path / "test.pdbqt"
+    pdbqt_file.write_text("ATOM fake pdbqt")  # mock obabel output
 
     _prepare_receptor_pdbqt(pdb_file, pdbqt_file)
 
-    content = pdbqt_file.read_text()
+    # Check the cleaned PDB was written without HETATM/HOH
+    clean_pdb = tmp_path / "test_clean.pdb"
+    content = clean_pdb.read_text()
     assert "HOH" not in content
     assert "LIG" not in content
     assert "ALA" in content
 
 
-def test_prepare_receptor_produces_pdbqt(tmp_path):
-    """Prepared file should contain ATOM records."""
+@patch("drugforge.receptor.subprocess.run")
+def test_prepare_receptor_calls_obabel(mock_run, tmp_path):
+    """Preparation should invoke obabel for PDB to PDBQT conversion."""
+    mock_run.return_value = MagicMock(returncode=0, stderr="")
     pdb_file = tmp_path / "test.pdb"
     pdb_file.write_text(SAMPLE_PDB)
     pdbqt_file = tmp_path / "test.pdbqt"
+    pdbqt_file.write_text("ATOM fake pdbqt")  # simulate obabel output
 
     _prepare_receptor_pdbqt(pdb_file, pdbqt_file)
 
-    content = pdbqt_file.read_text()
-    assert pdbqt_file.exists()
-    assert len(content) > 0
-    # Should have atom-type info appended
-    lines = [l for l in content.splitlines() if l.startswith("ATOM")]
-    assert len(lines) == 4
+    mock_run.assert_called_once()
+    args = mock_run.call_args[0][0]
+    assert args[0] == "obabel"
 
 
 @patch("drugforge.receptor._download_pdb")

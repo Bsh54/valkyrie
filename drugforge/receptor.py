@@ -1,6 +1,7 @@
 """Receptor manager — download PDB, prepare receptor PDBQT, cache locally."""
 
 import logging
+import subprocess
 from pathlib import Path
 
 import requests
@@ -28,80 +29,63 @@ def _download_pdb(pdb_id: str, dest: Path) -> None:
 
 def _prepare_receptor_pdbqt(pdb_path: Path, pdbqt_path: Path) -> None:
     """
-    Prepare receptor PDBQT from a PDB file.
+    Prepare receptor PDBQT from a PDB file using OpenBabel.
 
     Steps:
-    - Strip water molecules (HOH)
-    - Strip non-protein heteroatoms (ligands, ions)
-    - Keep only ATOM records + polar hydrogens info
-    - Write as PDBQT (simplified: ATOM lines with charge/type columns)
-
-    Note: For production use, ADFR Suite's prepare_receptor is preferred.
-    This is a lightweight fallback that produces a usable PDBQT.
+    - Strip water molecules and non-protein heteroatoms
+    - Convert to PDBQT format with partial charges via OpenBabel
     """
+    import subprocess
+
+    # First create a cleaned PDB (no water, no ligands)
     try:
         lines = pdb_path.read_text(encoding="utf-8").splitlines()
     except IOError as e:
         raise ReceptorError(f"Cannot read PDB file {pdb_path}: {e}")
 
-    pdbqt_lines = []
+    clean_lines = []
+    has_atoms = False
     for line in lines:
         record = line[:6].strip()
-
-        # Skip water and heteroatoms
         if record == "HETATM":
             continue
         if record == "ATOM":
             res_name = line[17:20].strip()
             if res_name == "HOH":
                 continue
-            # Convert ATOM line to PDBQT format
-            # PDBQT adds partial charge (0.0) and atom type at end
-            atom_name = line[12:16].strip()
+            has_atoms = True
+            clean_lines.append(line)
+        elif record in ("TER", "END", "HEADER", "REMARK"):
+            clean_lines.append(line)
 
-            # Determine AutoDock atom type from element
-            element = line[76:78].strip() if len(line) >= 78 else atom_name[0]
-            ad_type = _get_autodock_type(element, atom_name)
-
-            # Format: original PDB line + charge + type
-            pdbqt_line = f"{line[:54]}  0.00  0.000    {ad_type:>2s}"
-            pdbqt_lines.append(pdbqt_line)
-        elif record in ("TER", "END"):
-            pdbqt_lines.append(line.rstrip())
-
-    if not pdbqt_lines:
+    if not has_atoms:
         raise ReceptorError(
             f"No ATOM records found in PDB file {pdb_path}"
         )
 
-    pdbqt_path.write_text("\n".join(pdbqt_lines) + "\n", encoding="utf-8")
+    # Write cleaned PDB
+    clean_pdb_path = pdb_path.parent / f"{pdb_path.stem}_clean.pdb"
+    clean_pdb_path.write_text("\n".join(clean_lines) + "\n", encoding="utf-8")
+
+    # Convert to PDBQT using OpenBabel
+    try:
+        result = subprocess.run(
+            ["obabel", str(clean_pdb_path), "-O", str(pdbqt_path),
+             "-xr", "--partialcharge", "gasteiger"],
+            capture_output=True, text=True, timeout=120
+        )
+        if result.returncode != 0 or not pdbqt_path.exists():
+            raise ReceptorError(
+                f"OpenBabel conversion failed: {result.stderr}"
+            )
+    except FileNotFoundError:
+        raise ReceptorError(
+            "OpenBabel (obabel) not found. Install with: apt install openbabel"
+        )
+    except subprocess.TimeoutExpired:
+        raise ReceptorError("OpenBabel conversion timed out.")
+
     logger.info(f"Prepared receptor PDBQT: {pdbqt_path}")
-
-
-def _get_autodock_type(element: str, atom_name: str) -> str:
-    """Map element to AutoDock atom type."""
-    element = element.upper().strip()
-    type_map = {
-        "C": "C",
-        "N": "N",
-        "O": "OA",
-        "S": "SA",
-        "H": "HD",
-        "F": "F",
-        "P": "P",
-        "CL": "Cl",
-        "BR": "Br",
-        "I": "I",
-        "FE": "Fe",
-        "ZN": "Zn",
-        "MG": "Mg",
-        "CA": "Ca",
-        "MN": "Mn",
-    }
-    # Check for polar hydrogens (bonded to N or O)
-    if element == "H" and atom_name.startswith("H"):
-        return "HD"
-    return type_map.get(element, "C")
 
 
 def get_receptor_pdbqt(target: Target) -> Path:
