@@ -22,6 +22,14 @@ BOLTZ_API_URL = "https://api.boltz.bio/v2/predict"
 BOLTZ_API_TIMEOUT = 30  # seconds
 BOLTZ_TOP_N = 3  # only send top-N candidates to Boltz
 
+# DeepSeek API configuration (AI explainer)
+DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
+DEEPSEEK_MODEL = "deepseek-chat"
+DEEPSEEK_TIMEOUT = 15  # seconds
+
+# Disease fact sheets directory
+DISEASE_FACTS_DIR = DATA_DIR / "disease_facts"
+
 # Ensure directories exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 RECEPTOR_CACHE_DIR.mkdir(parents=True, exist_ok=True)

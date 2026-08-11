@@ -172,6 +172,29 @@ def get_stored_result(result_id: str):
     return result
 
 
+@app.get("/api/result/{result_id}/report")
+def get_result_report(result_id: str):
+    """Download a PDF report for a stored docking result."""
+    from fastapi.responses import Response
+    from drugforge.report import generate_report
+
+    result = get_result(result_id)
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "not_found", "detail": f"Result '{result_id}' not found."},
+        )
+
+    pdf_bytes = generate_report(result)
+    return Response(
+        content=bytes(pdf_bytes),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="drugforge_report_{result_id[:8]}.pdf"'
+        },
+    )
+
+
 # Mount static files (frontend)
 if STATIC_DIR.exists():
     app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
