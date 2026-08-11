@@ -17,6 +17,11 @@ MAX_EXHAUSTIVENESS = 32
 DOCKING_TIMEOUT_S = 300
 N_POSES = 5
 
+# Boltz-2 API configuration
+BOLTZ_API_URL = "https://api.boltz.bio/v2/predict"
+BOLTZ_API_TIMEOUT = 30  # seconds
+BOLTZ_TOP_N = 3  # only send top-N candidates to Boltz
+
 # Ensure directories exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 RECEPTOR_CACHE_DIR.mkdir(parents=True, exist_ok=True)

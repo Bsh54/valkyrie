@@ -46,11 +46,14 @@ def test_get_target_unknown():
 @patch("drugforge.api.save_result")
 def test_dock_success(mock_save, mock_pipeline):
     """POST /api/dock with valid input returns docking result."""
+    from drugforge.admet import ADMETResult
     mock_save.return_value = "test-uuid-123"
     mock_pipeline.return_value = PipelineResult(
         molecule_smiles="CCO",
         target_id="pf-dhfr",
         affinity_kcal_mol=-5.5,
+        vinardo_score=-4.8,
+        consensus_score=1.2,
         all_affinities=[-5.5, -5.2],
         pose_sdf="sdf data",
         pose_pdbqt="pdbqt data",
@@ -58,6 +61,13 @@ def test_dock_success(mock_save, mock_pipeline):
             molecular_weight=46.07, logp=-0.31, hbd=1, hba=1,
             tpsa=20.23, rotatable_bonds=0, lipinski_violations=0,
         ),
+        admet=ADMETResult(
+            esol_logs=-1.0, gi_absorption="High",
+            pains_alerts=[], brenk_alerts=[], nih_alerts=[],
+            reactive_groups=[], passes_filter=True, failure_reasons=[],
+        ),
+        is_hit=True,
+        hit_failure_reasons=[],
         comparisons=[Comparison(
             metric="affinity", molecule_value=-5.5,
             reference_value=-7.0, delta=1.5, ratio=0.786, verdict="worse",

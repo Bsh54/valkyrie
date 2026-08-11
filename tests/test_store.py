@@ -20,10 +20,13 @@ def temp_db(tmp_path):
 
 def _make_fake_result() -> PipelineResult:
     """Create a minimal PipelineResult for testing."""
+    from drugforge.admet import ADMETResult
     return PipelineResult(
         molecule_smiles="CCO",
         target_id="pf-dhfr",
         affinity_kcal_mol=-5.5,
+        vinardo_score=-4.8,
+        consensus_score=1.2,
         all_affinities=[-5.5, -5.2, -4.8],
         pose_sdf="fake sdf data",
         pose_pdbqt="fake pdbqt data",
@@ -36,6 +39,13 @@ def _make_fake_result() -> PipelineResult:
             rotatable_bonds=0,
             lipinski_violations=0,
         ),
+        admet=ADMETResult(
+            esol_logs=-1.0, gi_absorption="High",
+            pains_alerts=[], brenk_alerts=[], nih_alerts=[],
+            reactive_groups=[], passes_filter=True, failure_reasons=[],
+        ),
+        is_hit=True,
+        hit_failure_reasons=[],
         comparisons=[
             Comparison(
                 metric="affinity",
