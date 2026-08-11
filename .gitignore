@@ -1,10 +1,30 @@
+# Secrets and local environment
+.env
+.env.local
+
+# Local operations tooling (deployment, server sync) — never committed
+ops/
+
+# Generated data
 data/receptors/
 data/results.db
+data/benchmarks/
+data/dataset/
+
+# Python
 __pycache__/
-*.pyc
-*.pyo
-.venv/
+*.py[cod]
 *.egg-info/
-dist/
+.venv/
+venv/
 build/
+dist/
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+
+# Editors and OS
+.DS_Store
+.idea/
+*.swp

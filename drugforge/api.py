@@ -16,6 +16,7 @@ from drugforge.errors import (
     TargetNotFoundError,
     ValidationError,
 )
+from drugforge.benchmarks import load_benchmarks
 from drugforge.library import get_compounds, get_compound
 from drugforge.pipeline import run_docking_pipeline
 from drugforge.store import get_result, save_result
@@ -171,6 +172,11 @@ def get_stored_result(result_id: str):
             detail={"error": "not_found", "detail": f"Result '{result_id}' not found."},
         )
     return result
+
+
+@app.get("/api/benchmarks")
+def get_benchmarks():
+    return load_benchmarks()
 
 
 @app.get("/api/compounds")

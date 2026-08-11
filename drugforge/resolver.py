@@ -17,18 +17,32 @@ _COMPOUND_LOOKUP: dict[str, str] = {}
 
 
 def _load_compounds() -> None:
-    """Load the curated ethnobotanical compound table."""
+    """Build the local name lookup from the curated table and the plant registry."""
     global _COMPOUND_LOOKUP
     if _COMPOUND_LOOKUP:
         return
+
+    lookup: dict[str, str] = {}
     try:
         with open(COMPOUNDS_PATH, "r", encoding="utf-8") as f:
-            raw = json.load(f)
-        # Normalize keys to lowercase for case-insensitive lookup
-        _COMPOUND_LOOKUP = {k.lower().strip(): v for k, v in raw.items()}
+            lookup.update({k.lower().strip(): v for k, v in json.load(f).items()})
     except (FileNotFoundError, json.JSONDecodeError) as e:
         logger.warning(f"Could not load compounds table: {e}")
-        _COMPOUND_LOOKUP = {}
+
+    try:
+        from drugforge.library import get_compounds
+
+        for entry in get_compounds():
+            smiles = entry.get("smiles")
+            if not smiles:
+                continue
+            for key in (entry.get("id"), entry.get("compound_name")):
+                if key:
+                    lookup.setdefault(key.lower().strip(), smiles)
+    except Exception as e:
+        logger.warning(f"Could not load ethnobotanical registry: {e}")
+
+    _COMPOUND_LOOKUP = lookup
 
 
 def _canonicalize(smiles: str) -> str | None:

@@ -1,0 +1,17 @@
+{
+  "name": "Astex Diverse Set",
+  "citation": "Hartshorn MJ, Verdonk ML, Chessari G, et al. Diverse, high-quality test set for the validation of protein-ligand docking performance. J Med Chem 2007;50:726-741.",
+  "committed_before_run": true,
+  "pdb_ids": [
+    "1G9V", "1GKC", "1GM8", "1GPK", "1HNN", "1HP0", "1HQ2", "1HVY", "1HWI",
+    "1HWW", "1IA1", "1IG3", "1J3J", "1JD0", "1JJE", "1JLA", "1K3U", "1KE5",
+    "1KZK", "1L2S", "1L7F", "1LPZ", "1LRH", "1M2Z", "1MEH", "1MMV", "1MZC",
+    "1N1M", "1N2J", "1N2V", "1N46", "1NAV", "1OF1", "1OF6", "1OPK", "1OQ5",
+    "1OWE", "1OYT", "1P2Y", "1P62", "1PMN", "1Q1G", "1Q41", "1Q4G", "1R55",
+    "1R58", "1R9O", "1S19", "1S3V", "1SG0", "1SJ0", "1SQ5", "1SQN", "1T40",
+    "1T46", "1T9B", "1TOW", "1TT1", "1TZ8", "1U1C", "1U4D", "1UML", "1UNL",
+    "1UOU", "1V0P", "1V48", "1V4S", "1VCJ", "1W1P", "1W2G", "1XM6", "1XOQ",
+    "1XOZ", "1YGC", "1YQY", "1YV3", "1YVF", "1YWR", "1Z95", "2BM2", "2BR1",
+    "2BSM", "2D1O", "2G24", "2SIM"
+  ]
+}

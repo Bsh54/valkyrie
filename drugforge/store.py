@@ -11,6 +11,24 @@ from drugforge.config import DB_PATH
 from drugforge.pipeline import PipelineResult
 
 
+_EXPECTED_COLUMNS = {
+    "vinardo_score": "REAL",
+    "consensus_score": "REAL",
+    "admet_json": "TEXT",
+    "is_hit": "INTEGER",
+    "boltz_json": "TEXT",
+    "explanation_json": "TEXT",
+}
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Add columns missing from databases created by an earlier schema."""
+    existing = {row["name"] for row in conn.execute("PRAGMA table_info(docking_results)")}
+    for column, sql_type in _EXPECTED_COLUMNS.items():
+        if column not in existing:
+            conn.execute(f"ALTER TABLE docking_results ADD COLUMN {column} {sql_type}")
+
+
 def _get_connection() -> sqlite3.Connection:
     """Get a database connection, creating the DB and table if needed."""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -32,9 +50,11 @@ def _get_connection() -> sqlite3.Connection:
             is_hit INTEGER,
             comparison_json TEXT,
             verdict TEXT,
-            boltz_json TEXT
+            boltz_json TEXT,
+            explanation_json TEXT
         )
     """)
+    _migrate(conn)
     conn.commit()
     return conn
 
@@ -56,8 +76,8 @@ def save_result(result: PipelineResult) -> str:
             (id, timestamp, molecule_smiles, target_id, affinity,
              vinardo_score, consensus_score,
              pose_sdf, pose_pdbqt, drug_likeness_json, admet_json,
-             is_hit, comparison_json, verdict, boltz_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             is_hit, comparison_json, verdict, boltz_json, explanation_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 result_id,
@@ -75,6 +95,7 @@ def save_result(result: PipelineResult) -> str:
                 json.dumps([c.to_dict() for c in result.comparisons]),
                 result.verdict,
                 json.dumps(result.boltz.to_dict()) if result.boltz else None,
+                json.dumps(result.explanation.to_dict()) if result.explanation else None,
             ),
         )
         conn.commit()
@@ -117,4 +138,5 @@ def get_result(result_id: str) -> Optional[dict]:
         "comparisons": json.loads(row["comparison_json"]),
         "verdict": row["verdict"],
         "boltz": json.loads(row["boltz_json"]) if row["boltz_json"] else None,
+        "explanation": json.loads(row["explanation_json"]) if row["explanation_json"] else None,
     }

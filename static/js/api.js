@@ -30,6 +30,12 @@ const API = {
         return r.json();
     },
 
+    async getBenchmarks() {
+        const r = await fetch('/api/benchmarks');
+        if (!r.ok) throw new Error('Failed to load benchmarks');
+        return r.json();
+    },
+
     reportUrl(id) {
         return `/api/result/${id}/report`;
     }

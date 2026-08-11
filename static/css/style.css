@@ -215,6 +215,16 @@ th { background: var(--bg); font-weight: 600; font-size: 0.85rem; text-transform
 
 .actions { margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
 
+.scope-box {
+    background: var(--honesty-bg);
+    color: var(--honesty-text);
+    border: 1px solid #ffe69c;
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
     main { padding: 1rem; }
     .compound-grid { grid-template-columns: 1fr; }

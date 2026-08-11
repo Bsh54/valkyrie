@@ -4,6 +4,7 @@ import logging
 import tempfile
 from pathlib import Path
 
+from drugforge.config import VINA_CPU
 from drugforge.errors import DockingError
 from drugforge.targets import DockingBox
 
@@ -57,7 +58,7 @@ def rescore_vinardo(
         else:
             single_pose = "\n".join(first_model_lines) + "\n"
 
-        v = Vina(sf_name="vinardo", verbosity=0)
+        v = Vina(sf_name="vinardo", cpu=VINA_CPU, verbosity=0)
         v.set_receptor(str(receptor_pdbqt_path))
 
         # Write ligand to temp file

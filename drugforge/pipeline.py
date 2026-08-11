@@ -117,6 +117,7 @@ def run_docking_pipeline(
             receptor_pdbqt_path=receptor_path,
             box=target.box,
             exhaustiveness=exhaustiveness,
+            template_smiles=smiles,
         )
     except DrugForgeError as e:
         raise PipelineError(stage="docking", cause=e)

@@ -19,9 +19,158 @@ const App = {
             this.showResult(hash.replace('#/result/', ''));
         } else if (hash === '#/library') {
             this.showLibrary();
+        } else if (hash === '#/benchmarks') {
+            this.showBenchmarks();
         } else {
             this.showSubmit();
         }
+    },
+
+    async showBenchmarks() {
+        document.title = 'DrugForge — Benchmarks';
+        this.root.innerHTML = '<div class="loading">Loading benchmarks...</div>';
+
+        let data;
+        try {
+            data = await API.getBenchmarks();
+        } catch (e) {
+            this.root.innerHTML = `<div class="card"><h2>Benchmarks</h2>
+                <div class="error-box">${e.message}</div></div>`;
+            return;
+        }
+
+        this.root.innerHTML = `
+            <h1>Benchmarks</h1>
+            <div class="scope-box" role="note">
+                <strong>Scope.</strong> ${data.scope_statement}
+            </div>
+            ${this.renderInternalBench(data)}
+            ${this.renderExternalBench(data)}
+            <div class="card" style="font-size:0.85rem;color:var(--text-muted)">
+                <strong>Reproduce these numbers</strong>
+                <pre style="white-space:pre-wrap;margin-top:0.5rem">python scripts/bench_internal.py
+python scripts/bench_external.py</pre>
+                ${data.disclaimer}
+            </div>
+        `;
+    },
+
+    renderInternalBench(data) {
+        if (data.internal_status !== 'available') {
+            return `<div class="card"><h2>Internal validation</h2>
+                <p style="color:var(--text-muted)">Not yet run.</p></div>`;
+        }
+        const b = data.internal;
+        const rd = b.redocking || {};
+        const rp = b.reproducibility || {};
+        const ct = b.controls || {};
+        const en = b.enrichment || {};
+
+        const rdRows = (rd.results || []).map(r => `<tr>
+            <td>${r.pdb_id}</td>
+            <td>${r.rmsd !== undefined ? r.rmsd + ' Å' : '—'}</td>
+            <td>${r.status}</td>
+            <td>${r.reason || ''}</td></tr>`).join('');
+
+        const negRows = (ct.negatives || []).map(n => `<tr>
+            <td>${n.name}</td>
+            <td>${n.vina !== undefined ? n.vina : '—'}</td>
+            <td>${n.reason || 'ok'}</td></tr>`).join('');
+
+        const enrichBlock = en.status === 'available' ? `
+            <table>
+                <thead><tr><th>Score</th><th>AUC</th><th>EF 1%</th><th>EF 10%</th></tr></thead>
+                <tbody>
+                    <tr><td>Vina</td><td>${this.fmt(en.vina?.auc)}</td>
+                        <td>${this.fmt(en.vina?.ef1)}</td><td>${this.fmt(en.vina?.ef10)}</td></tr>
+                    <tr><td>Consensus</td><td>${this.fmt(en.consensus?.auc)}</td>
+                        <td>${this.fmt(en.consensus?.ef1)}</td><td>${this.fmt(en.consensus?.ef10)}</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:0.5rem">
+                ${en.n_actives} actives / ${en.n_inactives} inactives,
+                ${(en.skipped || []).length} skipped.
+                Consensus improves AUC: <strong>${en.consensus_improves === null ? 'undetermined' : (en.consensus_improves ? 'yes' : 'no')}</strong>
+            </p>
+            ${en.inactives_note ? `<p style="font-size:0.8rem;color:var(--text-muted)">${en.inactives_note}</p>` : ''}
+        ` : `<p style="color:var(--text-muted)">Not run (${en.reason || 'no data'}).</p>`;
+
+        return `
+            <div class="card">
+                <h2>Internal validation — ${b.target_name} (${b.pdb_id})</h2>
+                <p style="color:var(--text-muted);font-size:0.9rem">
+                    Reference drug: ${b.reference_drug} ·
+                    exhaustiveness ${b.config?.exhaustiveness} ·
+                    Vina ${b.config?.vina_version} ·
+                    generated ${(b.generated_at || '').slice(0, 10)}
+                </p>
+
+                <h3>Redocking RMSD</h3>
+                <p>Evaluated ${rd.evaluated ?? 0} · skipped ${rd.skipped ?? 0} ·
+                   RMSD &lt; 2.0 Å: ${rd.success_rate_under_2A === null || rd.success_rate_under_2A === undefined ? '—' : (rd.success_rate_under_2A * 100).toFixed(0) + '%'}</p>
+                <table><thead><tr><th>PDB</th><th>RMSD</th><th>Status</th><th>Reason</th></tr></thead>
+                    <tbody>${rdRows}</tbody></table>
+                ${rd.note ? `<p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem">${rd.note}</p>` : ''}
+
+                <h3 style="margin-top:1.25rem">Reproducibility</h3>
+                <p>n=${rp.n} · mean ${this.fmt(rp.mean)} kcal/mol ·
+                   spread ±${this.fmt(rp.spread)} · std ${this.fmt(rp.std)}</p>
+
+                <h3 style="margin-top:1.25rem">Controls</h3>
+                <p>Reference ${ct.reference?.name}: <strong>${this.fmt(ct.reference?.vina)}</strong> kcal/mol ·
+                   expected ordering held:
+                   <strong>${ct.ordering_held === null ? 'undetermined' : (ct.ordering_held ? 'yes' : 'no')}</strong></p>
+                <table><thead><tr><th>Negative control</th><th>Vina</th><th>Status</th></tr></thead>
+                    <tbody>${negRows}</tbody></table>
+
+                <h3 style="margin-top:1.25rem">Enrichment</h3>
+                ${enrichBlock}
+            </div>
+        `;
+    },
+
+    renderExternalBench(data) {
+        if (data.external_status !== 'available') {
+            return `<div class="card"><h2>External independent redocking</h2>
+                <p style="color:var(--text-muted)">Not yet run.</p></div>`;
+        }
+        const b = data.external;
+        const breakdown = Object.entries(b.skip_reasons || {})
+            .map(([k, v]) => `${k}: ${v}`).join(' · ') || 'none';
+
+        const rows = (b.results || []).map(r => `<tr>
+            <td>${r.pdb_id}</td>
+            <td>${r.ligand_residue || ''}</td>
+            <td>${r.rmsd !== undefined ? r.rmsd : '—'}</td>
+            <td>${r.status}</td>
+            <td>${r.reason || ''}</td></tr>`).join('');
+
+        return `
+            <div class="card">
+                <h2>External independent redocking</h2>
+                <p style="color:var(--text-muted);font-size:0.9rem">
+                    ${b.set_name} · exhaustiveness ${b.config?.exhaustiveness} ·
+                    generated ${(b.generated_at || '').slice(0, 10)}
+                </p>
+                <p style="font-size:0.85rem"><strong>Selection rule.</strong> ${b.selection_rule}</p>
+                <p><strong>Attempted ${b.attempted}</strong> ·
+                   evaluated ${b.evaluated} · skipped ${b.skipped}</p>
+                <p>RMSD &lt; 2.0 Å: ${b.success_rate_under_2A === null ? '—' : (b.success_rate_under_2A * 100).toFixed(0) + '%'} ·
+                   median RMSD ${this.fmt(b.median_rmsd)} Å ·
+                   mean ${this.fmt(b.mean_rmsd)} Å</p>
+                <p style="font-size:0.85rem"><strong>Skipped breakdown.</strong> ${breakdown}</p>
+                <p style="font-size:0.8rem;color:var(--text-muted)">${b.denominator_note || ''}</p>
+                <div style="overflow-x:auto;max-height:420px;overflow-y:auto;margin-top:0.75rem">
+                    <table><thead><tr><th>PDB</th><th>Ligand</th><th>RMSD</th><th>Status</th><th>Reason</th></tr></thead>
+                        <tbody>${rows}</tbody></table>
+                </div>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem">${b.citation || ''}</p>
+            </div>
+        `;
+    },
+
+    fmt(v) {
+        return v === null || v === undefined ? '—' : v;
     },
 
     showSubmit() {
