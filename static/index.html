@@ -1,38 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DrugForge</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://3dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DrugForge</title>
+<link href="https://fonts.googleapis.com" rel="preconnect" />
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Public+Sans:wght@600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/js/theme.js"></script>
+<script src="https://3dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+<style>
+    body { background-color: #f7f9fb; color: #191c1e; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
 </head>
-<body>
-    <a href="#main" class="skip-link">Skip to content</a>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<div id="app" class="flex-1 flex flex-col"></div>
 
-    <header role="banner">
-        <nav aria-label="Main navigation">
-            <a href="#/" class="logo">DrugForge</a>
-            <div class="nav-links">
-                <a href="#/">Screen</a>
-                <a href="#/library">Library</a>
-                <a href="#/benchmarks">Benchmarks</a>
-            </div>
-        </nav>
-    </header>
-
-    <div class="honesty-banner" role="alert" aria-live="polite">
-        In-silico predictions only — not clinical advice. All results require laboratory validation.
-    </div>
-
-    <main id="app" role="main"></main>
-
-    <footer>
-        <p>DrugForge — Virtual screening for neglected tropical diseases.</p>
-        <p class="disclaimer">Computational predictions. Not medical evidence.</p>
-    </footer>
-
-    <script src="/js/api.js"></script>
-    <script src="/js/app.js"></script>
+<script src="/js/router.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/components/layout.js"></script>
+<script src="/js/components/viewer3d.js"></script>
+<script src="/js/pages/home.js"></script>
+<script src="/js/pages/lab.js"></script>
+<script src="/js/pages/library.js"></script>
+<script src="/js/pages/benchmarks.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>

@@ -1,9 +1,7 @@
 const API = {
     async _get(path) {
         const response = await fetch(path);
-        if (!response.ok) {
-            throw new Error(await this._message(response));
-        }
+        if (!response.ok) throw new Error(await this._message(response));
         return response.json();
     },
 
@@ -11,7 +9,7 @@ const API = {
         try {
             const body = await response.json();
             const detail = body.detail;
-            if (typeof detail === 'string') return detail;
+            if (typeof detail === "string") return detail;
             if (detail && detail.detail) return detail.detail;
             return `Request failed (${response.status})`;
         } catch {
@@ -20,16 +18,20 @@ const API = {
     },
 
     getTargets() {
-        return this._get('/api/targets');
+        return this._get("/api/targets");
+    },
+
+    getTarget(id) {
+        return this._get(`/api/targets/${encodeURIComponent(id)}`);
     },
 
     async getCompounds() {
-        const body = await this._get('/api/compounds');
+        const body = await this._get("/api/compounds");
         return body.compounds || [];
     },
 
     getBenchmarks() {
-        return this._get('/api/benchmarks');
+        return this._get("/api/benchmarks");
     },
 
     getScreening(id) {
@@ -37,18 +39,12 @@ const API = {
     },
 
     async submitScreening(molecule, targetId, exhaustiveness) {
-        const response = await fetch('/api/screenings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                molecule,
-                target_id: targetId,
-                exhaustiveness,
-            }),
+        const response = await fetch("/api/screenings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ molecule, target_id: targetId, exhaustiveness }),
         });
-        if (!response.ok) {
-            throw new Error(await this._message(response));
-        }
+        if (!response.ok) throw new Error(await this._message(response));
         return response.json();
     },
 

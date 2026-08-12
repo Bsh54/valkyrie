@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from drugforge import __version__
@@ -19,6 +20,10 @@ DESCRIPTION = (
     "candidate molecules; it does not discover or prove drugs, and it never "
     "gives clinical advice."
 )
+
+# Client-side routes rendered by the SPA shell. Each one serves index.html and
+# lets the router in app.js resolve the actual page from location.pathname.
+_SPA_ROUTES = ("/", "/lab", "/library", "/benchmarks", "/result/{result_id}")
 
 
 def create_app() -> FastAPI:
@@ -40,7 +45,18 @@ def create_app() -> FastAPI:
         }
 
     if STATIC_DIR.is_dir():
-        app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
+        index_path = STATIC_DIR / "index.html"
+        for route in _SPA_ROUTES:
+            app.get(route, include_in_schema=False)(
+                lambda: FileResponse(index_path)
+            )
+
+        for asset_dir in ("js", "css"):
+            asset_path = STATIC_DIR / asset_dir
+            if asset_path.is_dir():
+                app.mount(
+                    f"/{asset_dir}", StaticFiles(directory=str(asset_path)), name=asset_dir
+                )
     else:
         logger.warning("Static directory %s not found; UI disabled", STATIC_DIR)
 

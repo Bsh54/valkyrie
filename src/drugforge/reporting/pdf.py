@@ -43,6 +43,29 @@ def build_report(result: dict) -> bytes:
     return bytes(pdf.output())
 
 
+_CHARACTER_REPLACEMENTS = {
+    "\u2014": "-", "\u2013": "-", "\u2212": "-",
+    "\u2018": "'", "\u2019": "'", "\u201a": ",",
+    "\u201c": '"', "\u201d": '"',
+    "\u2026": "...", "\u2022": "-", "\u00a0": " ",
+    "\u2264": "<=", "\u2265": ">=", "\u2248": "~",
+    "\u00c5": "A", "\u03bc": "u", "\u00b5": "u",
+    "\u2192": "->", "\u2190": "<-", "\u00d7": "x",
+}
+
+
+def _encodable(text: str) -> str:
+    """Reduce text to what fpdf2's built-in fonts can encode.
+
+    The core fonts are Latin-1 only, and model output routinely contains em
+    dashes and typographic quotes. Bundling a Unicode font would be heavier than
+    transliterating the handful of characters that actually occur.
+    """
+    for source, replacement in _CHARACTER_REPLACEMENTS.items():
+        text = text.replace(source, replacement)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
+
 def _block(pdf, text: str, height: float, **kwargs) -> None:
     """Write a full-width block and return the cursor to the left margin.
 
@@ -51,7 +74,9 @@ def _block(pdf, text: str, height: float, **kwargs) -> None:
     """
     from fpdf.enums import XPos, YPos
 
-    pdf.multi_cell(0, height, text, new_x=XPos.LMARGIN, new_y=YPos.NEXT, **kwargs)
+    pdf.multi_cell(
+        0, height, _encodable(text), new_x=XPos.LMARGIN, new_y=YPos.NEXT, **kwargs
+    )
 
 
 def _banner(pdf, text: str) -> None:
@@ -148,7 +173,7 @@ def _detail_page(pdf, result: dict) -> None:
 
     pdf.set_font("Helvetica", "B", 9)
     for width, header in zip(widths, headers, strict=True):
-        pdf.cell(width, 6, header, border=1)
+        pdf.cell(width, 6, _encodable(header), border=1)
     pdf.ln()
 
     pdf.set_font("Helvetica", "", 9)
@@ -161,7 +186,7 @@ def _detail_page(pdf, result: dict) -> None:
             str(comparison.get("verdict", "")),
         )
         for width, cell in zip(widths, cells, strict=True):
-            pdf.cell(width, 5, cell, border=1)
+            pdf.cell(width, 5, _encodable(cell), border=1)
         pdf.ln()
     pdf.ln(4)
 
