@@ -1,7 +1,16 @@
-// Ethnobotanical library. Layout lifted from
-// stitch_drugforge_molecular_docking_lab/drugforge_ethnobotanical_library.
+// Ethnobotanical library. Visual style from
+// stitch_drugforge_molecular_docking_lab/drugforge_ethnobotanical_library,
+// wired to real /api/compounds data. No stock photos, no simulated entries.
 const LibraryPage = {
     state: { compounds: [], query: "", diseaseFilter: "", error: null },
+
+    images: {
+        cryptolepine: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/COI00077101_-_Cryptolepis_sanguinolenta_-_Welwitsch%2C_Friedrich_-_5993.jpg/500px-COI00077101_-_Cryptolepis_sanguinolenta_-_Welwitsch%2C_Friedrich_-_5993.jpg",
+        artemisinin: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Artemisia_annua.jpeg/500px-Artemisia_annua.jpeg",
+        "khaya-limonoid": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Jeune_ca%C3%AFlc%C3%A9drat.jpg/500px-Jeune_ca%C3%AFlc%C3%A9drat.jpg",
+        reserpine: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rauvolfia_vomitoria-Jardin_botanique_Meise_%284%29.jpg/500px-Rauvolfia_vomitoria-Jardin_botanique_Meise_%284%29.jpg",
+        strictosamide: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Nauclea_latifolia_.jpg/500px-Nauclea_latifolia_.jpg",
+    },
 
     async render(mountEl) {
         this.mountEl = mountEl;
@@ -14,8 +23,20 @@ const LibraryPage = {
     },
 
     paint() {
-        this.mountEl.innerHTML = Layout.shell(this.body());
+        this.mountEl.innerHTML = AppShell.shell(this.body());
         this.wireEvents();
+    },
+
+    diseases() {
+        const set = new Set();
+        this.state.compounds.forEach((c) =>
+            (c.traditional_use.disease || "")
+                .split(/[,/]/)
+                .map((d) => d.trim())
+                .filter(Boolean)
+                .forEach((d) => set.add(d))
+        );
+        return [...set].sort();
     },
 
     wireEvents() {
@@ -33,6 +54,10 @@ const LibraryPage = {
                 this.updateGrid();
             });
         }
+        this.wireCards();
+    },
+
+    wireCards() {
         document.querySelectorAll("[data-dock-smiles]").forEach((el) => {
             el.addEventListener("click", () => {
                 sessionStorage.setItem("drugforge:prefill", el.dataset.dockSmiles);
@@ -44,48 +69,49 @@ const LibraryPage = {
     updateGrid() {
         const grid = document.getElementById("library-grid");
         if (grid) grid.outerHTML = this.grid();
-        this.wireEvents();
+        this.wireCards();
     },
 
     filtered() {
         const q = this.state.query.toLowerCase();
+        const d = this.state.diseaseFilter.toLowerCase();
         return this.state.compounds.filter((c) => {
             const matchesQuery =
                 !q ||
                 c.compound_name.toLowerCase().includes(q) ||
                 c.plant.scientific_name.toLowerCase().includes(q) ||
-                c.plant.local_name.toLowerCase().includes(q);
-            const matchesDisease =
-                !this.state.diseaseFilter ||
-                c.traditional_use.disease.toLowerCase().includes(this.state.diseaseFilter);
+                c.plant.local_name.toLowerCase().includes(q) ||
+                (c.smiles || "").toLowerCase().includes(q);
+            const matchesDisease = !d || (c.traditional_use.disease || "").toLowerCase().includes(d);
             return matchesQuery && matchesDisease;
         });
     },
 
     body() {
+        const diseaseOptions = this.diseases()
+            .map((d) => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`)
+            .join("");
+        const title = `
+            <h1 class="font-headline-md text-body-lg text-on-surface font-medium">Ethnobotanical Library</h1>
+            <span class="font-code-md text-xs text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-full px-2.5 py-1">${this.state.compounds.length} compounds</span>`;
         return `
-        <div class="max-w-max-width mx-auto w-full px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
-            <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 md:p-8">
-                <span class="inline-block bg-primary-container/10 text-primary px-3 py-1 rounded-full font-label-caps text-label-caps uppercase mb-3">Ethnobotanical Library</span>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Traditional knowledge, in-silico validation.</h1>
-                <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
-                    Curated African medicinal-plant compounds, each cited to its traditional use, region and
-                    preparation. Dock any compound directly against a target.
-                </p>
-            </section>
-
-            <section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row gap-4 items-center sticky top-16 z-40">
-                <input id="library-search" type="text" placeholder="Search by plant, local name or compound..."
-                    class="flex-1 w-full px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
-                <select id="disease-filter" class="w-full md:w-56 px-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md">
-                    <option value="">All diseases</option>
-                    <option value="malaria">Malaria</option>
-                    <option value="fever">Fever</option>
+        ${AppShell.toolbar(title)}
+        <div class="border-b border-outline-variant bg-surface px-5 py-4 flex flex-col md:flex-row gap-3 items-center">
+            <div class="flex-1 relative w-full">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                <input id="library-search" type="text" placeholder="Search by botanical name, local name, compound or SMILES..."
+                    class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-outline-variant rounded-xl font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
+            </div>
+            <div class="relative w-full md:w-56">
+                <select id="disease-filter" class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-xl px-4 py-2.5 pr-10 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                    <option value="">Filter by disease</option>
+                    ${diseaseOptions}
                 </select>
-            </section>
-
-            ${this.state.error ? `<div class="p-3 bg-error-container text-on-error-container rounded font-body-sm text-body-sm">${escapeHtml(this.state.error)}</div>` : ""}
-
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">arrow_drop_down</span>
+            </div>
+        </div>
+        <div class="p-5 flex flex-col gap-5">
+            ${this.state.error ? `<div class="p-3 bg-error-container text-on-error-container rounded-xl font-body-sm text-body-sm">${escapeHtml(this.state.error)}</div>` : ""}
             ${this.grid()}
         </div>`;
     },
@@ -93,7 +119,7 @@ const LibraryPage = {
     grid() {
         const items = this.filtered();
         if (!items.length) {
-            return `<div id="library-grid" class="text-center py-12 text-on-surface-variant">No compounds match your search.</div>`;
+            return `<section id="library-grid" class="text-center py-16 text-on-surface-variant font-body-md text-body-md">No compounds match your search.</section>`;
         }
         return `<section id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             ${items.map((c) => this.card(c)).join("")}
@@ -101,35 +127,40 @@ const LibraryPage = {
     },
 
     card(c) {
+        const primaryDisease = (c.traditional_use.disease || "").split(/[,/]/)[0].trim();
+        const detail = (icon, text) =>
+            text
+                ? `<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[16px]">${icon}</span><span>${escapeHtml(text)}</span>
+                </div>`
+                : "";
         return `
-        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col hover:shadow-[0px_8px_24px_rgba(0,0,0,0.08)] transition-shadow">
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col group hover:shadow-[0px_8px_24px_rgba(0,0,0,0.08)] transition-shadow">
+            <div class="h-44 relative border-b border-outline-variant bg-surface-container-low overflow-hidden">
+                ${this.images[c.id] ? `<img src="${this.images[c.id]}" alt="${escapeHtml(c.plant.scientific_name)}" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />` : ""}
+                <div class="absolute inset-0 items-center justify-center bg-deep-navy ${this.images[c.id] ? "hidden" : "flex"}">
+                    <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(#a9c7ff 1px, transparent 1px);background-size:14px 14px;"></div>
+                    <span class="material-symbols-outlined text-primary-fixed-dim relative z-10" style="font-size:72px;font-variation-settings:'FILL' 1;">potted_plant</span>
+                </div>
+                <span class="absolute top-2 right-2 z-10 bg-molecular-green/90 text-white px-2 py-1 rounded font-label-caps text-label-caps">${escapeHtml(primaryDisease || "compound")}</span>
+            </div>
             <div class="p-4 flex-1 flex flex-col gap-2">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="font-headline-md text-headline-md text-on-surface italic">${escapeHtml(c.plant.scientific_name)}</h3>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant">${escapeHtml(c.plant.local_name)}</p>
-                    </div>
-                    <span class="bg-molecular-green/10 text-molecular-green px-2 py-1 rounded font-label-caps text-label-caps border border-molecular-green/20 shrink-0">${escapeHtml(c.traditional_use.disease)}</span>
+                <div>
+                    <h3 class="font-headline-md text-headline-md text-on-surface italic leading-tight">${escapeHtml(c.plant.scientific_name)}</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">${escapeHtml(c.plant.local_name)}${c.plant.family ? ` &middot; ${escapeHtml(c.plant.family)}` : ""}</p>
                 </div>
                 <div class="mt-2 space-y-1.5">
-                    <div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
-                        <span class="material-symbols-outlined text-[16px]">public</span><span>${escapeHtml(c.traditional_use.region)}</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
-                        <span class="material-symbols-outlined text-[16px]">groups</span><span>${escapeHtml(c.traditional_use.people)}</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
-                        <span class="material-symbols-outlined text-[16px]">science</span><span>${escapeHtml(c.compound_name)} (active)</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
-                        <span class="material-symbols-outlined text-[16px]">water_drop</span><span>${escapeHtml(c.traditional_use.preparation)}</span>
-                    </div>
+                    ${detail("science", `${c.compound_name} (active)`)}
+                    ${detail("public", c.traditional_use.region)}
+                    ${detail("groups", c.traditional_use.people)}
+                    ${detail("water_drop", c.traditional_use.preparation)}
                 </div>
-                <p class="text-xs text-on-surface-variant mt-2 border-t border-outline-variant pt-2">${escapeHtml(c.source)}</p>
+                <p class="text-xs text-on-surface-variant mt-2 border-t border-outline-variant pt-2 line-clamp-3">${escapeHtml(c.source)}</p>
                 <div class="mt-auto pt-4 flex gap-2">
                     <button data-dock-smiles="${escapeHtml(c.smiles)}" class="flex-1 bg-primary text-on-primary font-body-sm text-body-sm px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-deep-navy transition-colors">
                         <span class="material-symbols-outlined text-[18px]">biotech</span> Dock this compound
                     </button>
+                    <span class="px-3 py-2 border border-outline-variant rounded text-outline font-code-md text-xs flex items-center" title="SMILES">${escapeHtml((c.smiles || "").slice(0, 10))}${(c.smiles || "").length > 10 ? "…" : ""}</span>
                 </div>
             </div>
         </div>`;
