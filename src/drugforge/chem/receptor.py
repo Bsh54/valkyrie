@@ -19,6 +19,16 @@ from drugforge.errors import ReceptorError
 logger = logging.getLogger(__name__)
 
 _SOLVENT_RESIDUES = {"HOH", "DOD", "WAT"}
+# Functionally essential cofactors that define the binding pocket and must be kept
+# in the receptor (e.g. the CYP51 haem the azole coordinates, the PTR1 NADP the
+# inhibitor stacks against). The co-crystallised inhibitor is still removed.
+_COFACTOR_RESIDUES = {
+    "HEM", "HEC", "HEA", "HEB", "HAS",  # haems
+    "NAP", "NDP", "NAD", "NAI", "NADP",  # nicotinamide cofactors
+    "FAD", "FMN",  # flavins
+    "FES", "SF4",  # iron-sulfur clusters
+    "PLP",  # pyridoxal phosphate
+}
 _OBABEL_TIMEOUT_S = 120
 
 
@@ -57,17 +67,24 @@ def download_structure(pdb_id: str, destination: Path) -> None:
 _STRUCTURAL_RECORDS = {"TER", "END"}
 
 
-def _is_protein_atom(line: str) -> bool:
-    return line[:6].strip() == "ATOM" and line[17:20].strip() not in _SOLVENT_RESIDUES
+def _keep_line(line: str) -> bool:
+    tag = line[:6].strip()
+    residue = line[17:20].strip()
+    if tag == "ATOM":
+        return residue not in _SOLVENT_RESIDUES
+    if tag == "HETATM":
+        return residue in _COFACTOR_RESIDUES
+    return tag in _STRUCTURAL_RECORDS
 
 
 def strip_solvent_and_ligands(pdb_text: str) -> str:
-    """Keep protein ATOM records only, dropping water and heteroatoms."""
-    kept = [
-        line
-        for line in pdb_text.splitlines()
-        if _is_protein_atom(line) or line[:6].strip() in _STRUCTURAL_RECORDS
-    ]
+    """Keep the protein and essential cofactors; drop water and the inhibitor.
+
+    Protein ATOM records are kept, functionally critical cofactors (haem, NADP,
+    flavins...) are retained as HETATM, and everything else — water, ions and the
+    co-crystallised inhibitor — is discarded so the pocket is empty but complete.
+    """
+    kept = [line for line in pdb_text.splitlines() if _keep_line(line)]
 
     if not any(line.startswith("ATOM") for line in kept):
         raise ReceptorError("No protein ATOM records found in the structure.")
@@ -86,10 +103,10 @@ def prepare_receptor(pdb_path: Path, pdbqt_path: Path) -> None:
 
     try:
         completed = subprocess.run(
-            [
-                "obabel", str(clean_path), "-O", str(pdbqt_path),
-                "-xr", "--partialcharge", "gasteiger",
-            ],
+            # No Gasteiger charges: AutoDock Vina scores by atom type, not partial
+            # charge, and Gasteiger fails on cofactor metals (e.g. the haem iron),
+            # which would silently drop the cofactor or empty the whole receptor.
+            ["obabel", str(clean_path), "-p", "7.4", "-O", str(pdbqt_path), "-xr"],
             capture_output=True,
             text=True,
             timeout=_OBABEL_TIMEOUT_S,
@@ -104,5 +121,17 @@ def prepare_receptor(pdb_path: Path, pdbqt_path: Path) -> None:
 
     if completed.returncode != 0 or not pdbqt_path.exists():
         raise ReceptorError(f"Open Babel conversion failed: {completed.stderr[:300]}")
+
+    # Guard against a silent empty receptor: an empty PDBQT would let a run dock
+    # against nothing and report a meaningless 0.0 affinity.
+    if pdbqt_path.stat().st_size == 0 or not any(
+        line.startswith(("ATOM", "HETATM"))
+        for line in pdbqt_path.read_text(encoding="utf-8").splitlines()
+    ):
+        pdbqt_path.unlink(missing_ok=True)
+        raise ReceptorError(
+            f"Open Babel produced an empty receptor for {pdb_path.stem}: "
+            f"{completed.stderr[:300]}"
+        )
 
     logger.info("Prepared receptor %s", pdbqt_path)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import subprocess
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -15,12 +16,39 @@ _EMBED_SEEDS = (42, 123, 2024)
 
 
 def prepare_ligand(smiles: str) -> tuple[Chem.Mol, str]:
-    """Embed a molecule in 3D, optimise it, and convert it to PDBQT."""
+    """Embed a molecule in 3D, optimise it, and convert it to PDBQT.
+
+    The molecule is first (de-)protonated to its dominant state at pH 7.4 so that
+    acids, amines and similar groups carry the charge they would in the body.
+    """
+    smiles = _protonate_ph74(smiles)
     mol = _parse(smiles)
     mol = Chem.AddHs(mol)
     _embed(mol, smiles)
     _optimise(mol, smiles)
     return mol, _to_pdbqt(mol)
+
+
+def _protonate_ph74(smiles: str) -> str:
+    """Return the pH 7.4 protonation state via Open Babel, or the input unchanged.
+
+    Never fails the pipeline: any Open Babel problem falls back to the input SMILES.
+    """
+    try:
+        completed = subprocess.run(
+            ["obabel", f"-:{smiles}", "-osmi", "-p", "7.4"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return smiles
+
+    candidate = (completed.stdout or "").strip().split("\t")[0].split()[0:1]
+    if candidate and Chem.MolFromSmiles(candidate[0]) is not None:
+        return candidate[0]
+    return smiles
 
 
 def _parse(smiles: str) -> Chem.Mol:
