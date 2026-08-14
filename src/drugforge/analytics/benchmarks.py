@@ -86,13 +86,44 @@ def _read_artifact(name: str) -> dict | None:
 
 
 def load_report() -> dict:
-    """Read generated artifacts, reporting absent ones as not run."""
-    internal = _read_artifact("internal")
+    """Read generated artifacts, reporting absent ones as not run.
+
+    Aggregates one internal report per target: the primary ``internal.json`` plus
+    any ``internal_<target_id>.json`` files, so the page can switch between targets.
+    """
     external = _read_artifact("external")
+
+    reports: list[dict] = []
+    primary = _read_artifact("internal")
+    if primary:
+        reports.append(primary)
+    for path in sorted(BENCHMARKS_DIR.glob("internal_*.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if any(r.get("target_id") == data.get("target_id") for r in reports):
+            continue
+        reports.append(data)
+
+    targets = [
+        {
+            "target_id": r.get("target_id"),
+            "target_name": r.get("target_name"),
+            "pdb_id": r.get("pdb_id"),
+            "reference_drug": r.get("reference_drug"),
+            "internal": r,
+        }
+        for r in reports
+    ]
+
     return {
-        "internal": internal,
+        # Backward-compatible primary target at the top level.
+        "internal": primary,
+        "internal_status": "available" if primary else "not_run",
+        # All targets for the switcher.
+        "targets": targets,
         "external": external,
-        "internal_status": "available" if internal else "not_run",
         "external_status": "available" if external else "not_run",
         "scope_statement": SCOPE_STATEMENT,
         "disclaimer": DISCLAIMER,
