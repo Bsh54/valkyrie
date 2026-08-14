@@ -43,6 +43,23 @@ The system shall load a curated per-disease fact sheet from `data/disease_facts/
 and include it in the prompt context to ground explanations in validated
 background knowledge about the target disease and protein.
 
+### REQ-AE-8: Interpretation, Not Restatement
+The explanation shall interpret the result rather than restate the numbers
+verbatim: it shall state how the molecule compares to the reference drug, name
+the single biggest drug-likeness/ADMET strength and the single biggest
+weakness, and close with one concrete, actionable takeaway consistent with the
+computed verdict.
+
+### REQ-AE-9: Traditional-Knowledge Bridge
+When the docked molecule's canonical SMILES matches an entry in the
+ethnobotanical library, the system shall include that entry's plant (scientific
+and local name), traditional disease use, region, people, preparation and
+source in the prompt context, and shall instruct the model to state cautiously
+whether the in-silico result supports or nuances that traditional use, crediting
+the plant and people. When there is no match, the system shall state plainly in
+the context that no traditional-use record exists, rather than omitting the
+section silently.
+
 ## Constraints
 - DeepSeek API (model: deepseek-v4-flash) via standard OpenAI-compatible endpoint.
 - API key from env var `DEEPSEEK_API_KEY`.
