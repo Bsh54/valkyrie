@@ -76,7 +76,8 @@ const LabPage = {
         this.mountEl.innerHTML = AppShell.shell(this.body());
         this.wireEvents();
         if (this.state.result?.pose_sdf) {
-            Viewer3D.render("viewer-3d", this.state.result.pose_sdf);
+            const t = this.state.targets.find((x) => x.id === this.state.result.target_id);
+            Viewer3D.renderResult("viewer-3d", this.state.result.pose_sdf, t?.pdb_id);
         } else if (!this.state.loading) {
             this.previewTarget();
         }
@@ -179,16 +180,28 @@ const LabPage = {
 
     workspace(active, r) {
         return `
-        ${this.viewport(r ? "Docked binding pose" : active ? `${escapeHtml(active.name)} &middot; ${escapeHtml(active.pdb_id)} &middot; live 3D` : "3D structure")}
+        ${this.viewport(r ? "Docked pose in the pocket" : active ? `${escapeHtml(active.name)} &middot; ${escapeHtml(active.pdb_id)} &middot; live 3D` : "3D structure", !!r)}
         ${r ? this.funnelCard(r) : ""}
         ${r ? this.explanationBlock(r.explanation) : ""}`;
     },
 
-    viewport(label) {
+    viewport(label, controls = false) {
+        const btn = (icon, title, action) =>
+            `<button title="${title}" onclick="${action}" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-colors backdrop-blur-sm"><span class="material-symbols-outlined text-[18px]">${icon}</span></button>`;
+        const bar = controls
+            ? `<div class="absolute top-3 right-3 z-10 flex gap-1.5">
+                ${btn("360", "Spin", "Viewer3D.toggleSpin()")}
+                ${btn("blur_on", "Pocket surface", "Viewer3D.toggleSurface()")}
+                ${btn("visibility", "Show / hide protein", "Viewer3D.toggleProtein()")}
+                ${btn("recenter", "Reset view", "Viewer3D.reset()")}
+                ${btn("photo_camera", "Save PNG", "Viewer3D.screenshot()")}
+            </div>`
+            : "";
         return `
-        <div id="viewer-3d" class="relative w-full rounded-2xl border border-outline-variant bg-surface overflow-hidden" style="height:380px;">
-            <div id="viewer-3d-fallback" class="absolute inset-0 flex items-center justify-center text-outline font-code-md text-xs pointer-events-none">Loading structure...</div>
-            <span class="absolute bottom-3 left-3 z-10 font-label-caps text-label-caps text-primary bg-surface/85 px-2 py-1 rounded border border-outline-variant">${label}</span>
+        <div id="viewer-3d" class="relative w-full rounded-2xl border border-outline-variant ${controls ? "bg-[#0b1526]" : "bg-surface"} overflow-hidden" style="height:${controls ? 420 : 380}px;">
+            <div id="viewer-3d-fallback" class="absolute inset-0 flex items-center justify-center ${controls ? "text-primary-fixed-dim" : "text-outline"} font-code-md text-xs pointer-events-none">Loading structure...</div>
+            ${bar}
+            <span class="absolute bottom-3 left-3 z-10 font-label-caps text-label-caps ${controls ? "text-white bg-black/30 border-white/20" : "text-primary bg-surface/85 border-outline-variant"} px-2 py-1 rounded border">${label}</span>
         </div>`;
     },
 
