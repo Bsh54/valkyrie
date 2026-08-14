@@ -180,7 +180,8 @@ const LabPage = {
     workspace(active, r) {
         return `
         ${this.viewport(r ? "Docked binding pose" : active ? `${escapeHtml(active.name)} &middot; ${escapeHtml(active.pdb_id)} &middot; live 3D` : "3D structure")}
-        ${r ? this.funnelCard(r) : ""}`;
+        ${r ? this.funnelCard(r) : ""}
+        ${r ? this.explanationBlock(r.explanation) : ""}`;
     },
 
     viewport(label) {
@@ -257,7 +258,7 @@ const LabPage = {
         </div>
         <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-card p-5">
             <div class="text-on-surface-variant font-label-caps text-label-caps uppercase mb-1">Vina affinity</div>
-            <div class="font-display text-[40px] leading-none text-primary flex items-baseline gap-2">${r.affinity_kcal_mol}<span class="font-body-sm text-body-sm text-on-surface-variant">kcal/mol</span></div>
+            <div class="font-code-md text-[36px] font-bold leading-none text-primary flex items-baseline gap-2 tabular-nums">${r.affinity_kcal_mol}<span class="font-body-sm text-body-sm text-on-surface-variant font-normal">kcal/mol</span></div>
             <div class="grid grid-cols-2 gap-2 mt-4">
                 <div class="bg-surface p-2.5 rounded-xl text-center border border-outline-variant/50"><div class="text-xs text-on-surface-variant mb-1">Vinardo</div><div class="font-code-md text-code-md">${r.vinardo_score}</div></div>
                 <div class="bg-surface p-2.5 rounded-xl text-center border border-outline-variant/50"><div class="text-xs text-on-surface-variant mb-1">Consensus</div><div class="font-code-md text-code-md">${r.consensus_score}</div></div>
@@ -275,7 +276,6 @@ const LabPage = {
             ${this.comparisonTable(r.comparisons)}
         </div>
         ${this.admetBlock(r.admet)}
-        ${this.explanationBlock(r.explanation)}
         <div class="bg-surface-container-low p-3 rounded-xl font-code-md text-xs text-on-surface-variant break-all border border-outline-variant/50">${escapeHtml(r.molecule_smiles)}</div>`;
     },
 
