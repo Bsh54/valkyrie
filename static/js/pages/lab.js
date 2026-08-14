@@ -10,6 +10,7 @@ const LabPage = {
         this.state.running = false;
         this.state.error = null;
         this.state.queuePos = null;
+        this._bindUnloadCancel();
         if (!this.state.targets.length) {
             this.mountEl.innerHTML = AppShell.shell(`<div class="p-8 font-body-sm text-body-sm text-on-surface-variant">Loading lab...</div>`);
         }
@@ -53,6 +54,7 @@ const LabPage = {
         this.paint();
         try {
             const job = await API.submitScreening(molecule, this.state.activeTargetId, exhaustiveness);
+            this._activeJob = job.job_id;
             this._poll(job.job_id);
         } catch (e) {
             this.state.error = e.message;
@@ -62,6 +64,15 @@ const LabPage = {
     },
 
     async _poll(jobId) {
+        if (this._activeJob !== jobId) return; // superseded by a newer run
+        // Left the lab (navigated away or closed): cancel so a queued run does not
+        // waste the server, and stop polling.
+        if (!location.pathname.startsWith("/lab")) {
+            this._activeJob = null;
+            this.state.running = false;
+            API.cancelJob(jobId);
+            return;
+        }
         let job;
         try {
             job = await API.getJob(jobId);
@@ -70,22 +81,36 @@ const LabPage = {
             return;
         }
         if (job.status === "done") {
+            this._activeJob = null;
             this.state.running = false;
             Router.navigate(`/result/${job.result_id}`);
             return;
         }
-        if (job.status === "error") {
+        if (job.status === "error" || job.status === "cancelled") {
+            this._activeJob = null;
             this.state.running = false;
-            const err = job.error || {};
-            this.state.error = err.detail
-                ? `Docking failed${err.stage ? ` at ${err.stage}` : ""}: ${err.detail}`
-                : "Docking failed.";
+            if (job.status === "error") {
+                const err = job.error || {};
+                this.state.error = err.detail
+                    ? `Docking failed${err.stage ? ` at ${err.stage}` : ""}: ${err.detail}`
+                    : "Docking failed.";
+            }
             this.paint();
             return;
         }
         this.state.queuePos = job.position ?? null;
         this.paint();
         setTimeout(() => this._poll(jobId), 3000);
+    },
+
+    _bindUnloadCancel() {
+        if (this._unloadBound) return;
+        this._unloadBound = true;
+        const beacon = () => {
+            if (this._activeJob) navigator.sendBeacon(`/api/jobs/${this._activeJob}/cancel`);
+        };
+        window.addEventListener("pagehide", beacon);
+        window.addEventListener("beforeunload", beacon);
     },
 
     selectTarget(id) {

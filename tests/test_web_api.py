@@ -128,6 +128,19 @@ def test_job_reports_pipeline_errors(screening_result, cause, stage):
     assert job["error"]["detail"]
 
 
+def test_cancelled_queued_job_is_skipped():
+    with patch("drugforge.web.jobs.run_screening") as run:
+        jobs._jobs["cancel-me"] = {"status": "queued", "position": 0, "result_id": None, "error": None}
+        assert jobs.cancel("cancel-me") is True
+        jobs._run("cancel-me", "CCO", "pf-dhfr", 8)
+    assert jobs.get("cancel-me")["status"] == "cancelled"
+    run.assert_not_called()
+
+
+def test_cancel_route_reports_outcome(client):
+    assert client.post("/api/jobs/absent/cancel").json() == {"job_id": "absent", "cancelled": False}
+
+
 def test_request_validation_rejects_an_empty_molecule(client):
     response = client.post(
         "/api/screenings", json={"molecule": "", "target_id": "pf-dhfr"}

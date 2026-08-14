@@ -42,6 +42,10 @@ const API = {
         return this._get(`/api/jobs/${encodeURIComponent(jobId)}`);
     },
 
+    cancelJob(jobId) {
+        return fetch(`/api/jobs/${encodeURIComponent(jobId)}/cancel`, { method: "POST" }).catch(() => {});
+    },
+
     async submitScreening(molecule, targetId, exhaustiveness) {
         const response = await fetch("/api/screenings", {
             method: "POST",

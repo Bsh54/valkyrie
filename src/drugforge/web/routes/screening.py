@@ -37,6 +37,12 @@ def get_job(job_id: str) -> dict:
     return {"job_id": job_id, **job}
 
 
+@router.post("/jobs/{job_id}/cancel")
+def cancel_job(job_id: str) -> dict:
+    """Cancel an abandoned job so a queued docking never wastes the server."""
+    return {"job_id": job_id, "cancelled": jobs.cancel(job_id)}
+
+
 @router.get("/screenings/{result_id}")
 def get_screening(result_id: str) -> dict:
     result = repository.get(result_id)

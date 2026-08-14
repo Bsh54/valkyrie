@@ -25,6 +25,7 @@ _MAX_REMEMBERED = 500
 
 _jobs: dict[str, dict] = {}
 _order: list[str] = []
+_cancelled: set[str] = set()
 _lock = threading.Lock()
 _queue: "queue.Queue[tuple[str, str, str, int]]" = queue.Queue()
 
@@ -45,6 +46,20 @@ def submit(molecule: str, target_id: str, exhaustiveness: int) -> str:
     return job_id
 
 
+def cancel(job_id: str) -> bool:
+    """Request cancellation. A queued job is skipped before it runs (freeing the
+    CPU); a job already running in-process finishes but is marked cancelled so the
+    browser stops waiting on it."""
+    with _lock:
+        job = _jobs.get(job_id)
+        if job is None or job["status"] in ("done", "error", "cancelled"):
+            return False
+        _cancelled.add(job_id)
+        if job["status"] == "queued":
+            job["status"] = "cancelled"
+        return True
+
+
 def get(job_id: str) -> dict | None:
     with _lock:
         job = _jobs.get(job_id)
@@ -59,6 +74,11 @@ def _prune() -> None:
 
 def _run(job_id: str, molecule: str, target_id: str, exhaustiveness: int) -> None:
     with _lock:
+        # Skip work the user already abandoned while it waited in the queue.
+        if job_id in _cancelled:
+            _cancelled.discard(job_id)
+            _jobs[job_id] = {"status": "cancelled", "position": 0, "result_id": None, "error": None}
+            return
         if job_id in _jobs:
             _jobs[job_id]["status"] = "running"
     try:
