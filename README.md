@@ -132,6 +132,44 @@ active compound, and a literature citation.
 The intent is to bridge traditional knowledge to in-silico molecular validation,
 with the source of every claim visible. A prediction is not a validation.
 
+## How I used Kiro
+
+DrugForge was built with Kiro's spec-driven workflow. The `.kiro/` directory is the
+record of that process:
+
+- **Steering** (`.kiro/steering/`): persistent project rules Kiro applied to every
+  task — the product, the tech stack, the code structure, the property-based testing
+  policy, and a `positioning.md` that enforces honest, in-silico-only language.
+- **Specs** (`.kiro/specs/`): each feature was a spec taken through Spec -> Plan ->
+  Build — requirements in EARS form, a design, then trackable tasks. The specs cover
+  the docking engine and target registry, consensus rescoring, the ADMET filter, the
+  grounded AI explainer, the web UI, the PDF report, the benchmarks, and the open
+  dataset.
+- **Hooks** (`.kiro/hooks/`): automation, such as running the property-based tests on
+  file save.
+
+The central idea is spec-driven: a new disease target is a registry entry plus its
+spec, and the pipeline stays unchanged. The demo video shows this workflow.
+
+## Attribution
+
+Scientific tools and libraries:
+- AutoDock Vina (docking) and the Vinardo scoring function
+- RDKit, Meeko and Open Babel (ligand/receptor preparation, descriptors)
+- 3Dmol.js (in-browser 3D viewer), Tailwind CSS
+
+Public data and services:
+- RCSB PDB — protein structures (by PDB id)
+- PubChem — name-to-SMILES resolution
+- DeepSeek API — the optional plain-language explanation
+- Plant photographs from **Wikimedia Commons**, each used under its own Creative
+  Commons licence; see the file pages for author and licence
+  (Cryptolepis sanguinolenta, Artemisia annua, Khaya senegalensis, Rauvolfia
+  vomitoria, Nauclea latifolia).
+
+Ethnobotanical records in `data/ethnobotanical.json` cite their primary literature
+source in each entry.
+
 ## Licence
 
 Code under Apache-2.0. The ethnobotanical dataset is intended for release under
