@@ -425,8 +425,26 @@ const LabPage = {
     explanationBlock(explanation) {
         if (!explanation || explanation.status !== "success") return "";
         return `<div class="bg-primary-fixed/20 border border-primary-fixed rounded-2xl p-5">
-            <h4 class="font-label-caps text-label-caps text-primary uppercase mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">smart_toy</span> AI explanation</h4>
-            <p class="font-body-sm text-body-sm text-on-surface-variant whitespace-pre-line">${escapeHtml(explanation.text)}</p>
+            <h4 class="font-label-caps text-label-caps text-primary uppercase mb-3 flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">smart_toy</span> AI explanation</h4>
+            <div class="font-body-md text-body-md text-on-surface-variant leading-relaxed space-y-1.5">${this.formatExplanation(explanation.text)}</div>
         </div>`;
+    },
+
+    formatExplanation(text) {
+        const esc = escapeHtml(text || "");
+        const boldify = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong class="text-on-surface font-semibold">$1</strong>');
+        const out = [];
+        for (const raw of esc.split(/\n/)) {
+            const line = raw.trim();
+            if (!line) continue;
+            const heading = line.match(/^\*\*(.+?)\*\*[.:]?\s*(.*)$/);
+            if (heading) {
+                out.push(`<div class="font-headline-md text-body-md text-primary mt-3 first:mt-0">${heading[1]}</div>`);
+                if (heading[2]) out.push(`<p>${boldify(heading[2])}</p>`);
+            } else {
+                out.push(`<p>${boldify(line)}</p>`);
+            }
+        }
+        return out.join("");
     },
 };

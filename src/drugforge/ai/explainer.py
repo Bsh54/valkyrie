@@ -46,7 +46,8 @@ Rules:
   lab testing, or which liability should be fixed first).
 - Never say a molecule cures, works, or is effective. Say predicted, estimated,
   suggests, or in silico.
-- Be tight and readable: three to four short paragraphs.
+- Follow the numbered structure requested below. Write two to four clear, specific
+  sentences per point, and put each point's short label in bold at its start.
 - Close with one sentence on what docking cannot show."""
 
 _TEMPLATE = """Molecule: {smiles}

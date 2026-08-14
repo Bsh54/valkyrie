@@ -61,8 +61,8 @@ DEEPSEEK_API_URL = os.environ.get(
     "DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions"
 )
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
-DEEPSEEK_TIMEOUT_S = _int_from_env("DEEPSEEK_TIMEOUT", 20)
-DEEPSEEK_MAX_TOKENS = _int_from_env("DEEPSEEK_MAX_TOKENS", 320)
+DEEPSEEK_TIMEOUT_S = _int_from_env("DEEPSEEK_TIMEOUT", 30)
+DEEPSEEK_MAX_TOKENS = _int_from_env("DEEPSEEK_MAX_TOKENS", 1000)
 
 
 def deepseek_api_key() -> str:
