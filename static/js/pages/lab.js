@@ -2,7 +2,7 @@
 // a central 3D workspace, and a right inspector. Wired to POST /api/screenings and
 // GET /api/screenings/:id. Live target structure before a run, docked pose after.
 const LabPage = {
-    state: { targets: [], compounds: [], activeTargetId: null, result: null, running: false, error: null, queuePos: null },
+    state: { targets: [], compounds: [], activeTargetId: null, result: null, running: false, error: null, queuePos: null, molecule: "" },
 
     async render(mountEl, params) {
         this.mountEl = mountEl;
@@ -10,6 +10,8 @@ const LabPage = {
         this.state.running = false;
         this.state.error = null;
         this.state.queuePos = null;
+        this._activeJob = null; // drop any stale job so we never show a phantom run
+        if (params && params.prefill) this.state.molecule = params.prefill;
         this._bindUnloadCancel();
         if (!this.state.targets.length) {
             this.mountEl.innerHTML = AppShell.shell(`<div class="p-8 font-body-sm text-body-sm text-on-surface-variant">Loading lab...</div>`);
@@ -43,8 +45,9 @@ const LabPage = {
     async submit() {
         const molecule = document.getElementById("molecule-input").value.trim();
         const exhaustiveness = parseInt(document.getElementById("exhaustiveness-input").value, 10) || 8;
+        this.state.molecule = molecule;
         if (!molecule) {
-            this.state.error = "Enter a molecule name or SMILES.";
+            this.state.error = "Enter a molecule name or a SMILES string first.";
             this.paint();
             return;
         }
@@ -119,6 +122,7 @@ const LabPage = {
     },
 
     pickCompound(smiles) {
+        this.state.molecule = smiles;
         const input = document.getElementById("molecule-input");
         if (input) {
             input.value = smiles;
@@ -164,7 +168,10 @@ const LabPage = {
         const sel = document.getElementById("target-select");
         if (sel) sel.addEventListener("change", () => this.selectTarget(sel.value));
         const input = document.getElementById("molecule-input");
-        if (input) input.addEventListener("keydown", (e) => { if (e.key === "Enter") this.submit(); });
+        if (input) {
+            input.addEventListener("input", () => { this.state.molecule = input.value; });
+            input.addEventListener("keydown", (e) => { if (e.key === "Enter") this.submit(); });
+        }
         document.querySelectorAll("[data-compound-smiles]").forEach((el) => {
             el.addEventListener("click", () => this.pickCompound(el.dataset.compoundSmiles));
         });
@@ -215,7 +222,7 @@ const LabPage = {
                 </div>
                 <div class="flex-1">
                     <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-1.5">Molecule (name or SMILES)</label>
-                    <input id="molecule-input" type="text" placeholder="e.g. artemisinin, quinine, or a SMILES string"
+                    <input id="molecule-input" type="text" placeholder="e.g. artemisinin, quinine, or a SMILES string" value="${escapeHtml(this.state.molecule || "")}"
                         class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant rounded-xl font-code-md text-code-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                 </div>
                 <div class="w-full md:w-28">

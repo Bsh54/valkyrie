@@ -8,12 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Router.register("/lab", () => {
         const prefill = sessionStorage.getItem("drugforge:prefill");
         sessionStorage.removeItem("drugforge:prefill");
-        LabPage.render(mountEl, {}).then(() => {
-            if (prefill) {
-                const input = document.getElementById("molecule-input");
-                if (input) input.value = prefill;
-            }
-        });
+        LabPage.render(mountEl, { prefill });
     });
 
     Router.register("/result/:resultId", (params) => LabPage.render(mountEl, params));
