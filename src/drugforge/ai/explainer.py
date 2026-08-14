@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 
 import requests
+from rdkit import Chem
 
 from drugforge.config import (
     DEEPSEEK_API_URL,
@@ -19,6 +20,7 @@ from drugforge.config import (
     DISEASE_FACTS_DIR,
     deepseek_api_key,
 )
+from drugforge.content.library import list_compounds
 from drugforge.domain.models import Explanation, Target
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,10 @@ Rules:
   better, comparable or worse, and what does that imply?
 - Turn drug-likeness and ADMET into meaning: name the single biggest strength and
   the single biggest weakness, and which property is the bottleneck.
+- DrugForge bridges traditional African plant medicine and modern validation. When
+  a traditional use is provided, connect the computed result to it: does the
+  in-silico prediction support or nuance that traditional use? Credit the plant and
+  the people, and stay cautious (support is not proof).
 - Be actionable: end with a concrete takeaway (for example, worth prioritising for
   lab testing, or which liability should be fixed first).
 - Never say a molecule cures, works, or is effective. Say predicted, estimated,
@@ -64,6 +70,9 @@ ADMET
 - Reactive groups: {reactive}
 - Hit status: {hit_status}
 
+Traditional use
+{traditional_use}
+
 Disease context
 {disease_facts}
 
@@ -72,9 +81,13 @@ Give a grounded interpretation with real insight:
    and what that suggests about how tightly this molecule may sit in the pocket.
 2. Developability: read the drug-likeness and ADMET together, name the biggest
    strength and the biggest weakness, and say which property is the bottleneck.
-3. Takeaway: one clear, actionable conclusion (prioritise for lab testing, or the
+3. Traditional knowledge: if a traditional use is given above, say cautiously
+   whether this in-silico result supports, nuances, or does not support that
+   traditional use, and credit the plant and people it comes from. If none is
+   given, skip this point.
+4. Takeaway: one clear, actionable conclusion (prioritise for lab testing, or the
    first liability to address), consistent with the verdict.
-4. What remains unknown that only experiments could settle."""
+5. What remains unknown that only experiments could settle."""
 
 
 def is_available() -> bool:
@@ -90,6 +103,40 @@ def load_disease_facts(target_id: str) -> str:
         return path.read_text(encoding="utf-8")
     except OSError:
         return "No fact sheet is available for this target."
+
+
+def _canonical(smiles: str) -> str | None:
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        return Chem.MolToSmiles(mol) if mol is not None else None
+    except Exception:
+        return None
+
+
+def traditional_use_for(smiles: str) -> str:
+    """Ethnobotanical context for a molecule, matched by canonical SMILES."""
+    target = _canonical(smiles)
+    if target:
+        for entry in list_compounds():
+            if _canonical(entry.get("smiles", "")) == target:
+                plant = entry.get("plant") or {}
+                use = entry.get("traditional_use") or {}
+                local = plant.get("local_name")
+                return "\n".join(
+                    part
+                    for part in [
+                        f"{entry.get('compound_name', 'compound')} from "
+                        f"{plant.get('scientific_name', 'unknown plant')}"
+                        + (f" ({local})" if local else ""),
+                        f"Traditionally used for: {use.get('disease', 'unknown')}",
+                        f"Region and people: {use.get('region', 'unknown')}; "
+                        f"{use.get('people', 'unknown')}",
+                        f"Preparation: {use.get('preparation', 'unknown')}",
+                        f"Source: {entry.get('source', 'unknown')}",
+                    ]
+                    if part
+                )
+    return "This molecule is not in the ethnobotanical library; no traditional-use record."
 
 
 def build_prompt(result: dict, target: Target, disease_facts: str) -> str:
@@ -129,6 +176,7 @@ def build_prompt(result: dict, target: Target, disease_facts: str) -> str:
         pains=joined(admet.get("pains_alerts")),
         reactive=joined(admet.get("reactive_groups")),
         hit_status="passed filters" if result.get("is_hit") else "filtered out",
+        traditional_use=traditional_use_for(result.get("molecule_smiles", "unknown")),
         disease_facts=disease_facts,
     )
 
