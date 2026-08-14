@@ -5,13 +5,8 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 
-from drugforge.errors import (
-    DockingError,
-    PipelineError,
-    ReceptorError,
-    TargetNotFoundError,
-    ValidationError,
-)
+from drugforge.errors import DockingError, PipelineError, ValidationError
+from drugforge.web import jobs
 from drugforge.web.app import create_app
 
 
@@ -61,41 +56,47 @@ def test_benchmarks_state_their_scope(client):
     assert body["internal_status"] in {"available", "not_run"}
 
 
-@patch("drugforge.web.routes.screening.run_screening")
-def test_successful_screening_returns_the_full_result(mock_run, client, screening_result):
-    mock_run.return_value = screening_result
-    response = client.post(
-        "/api/screenings", json={"molecule": "ethanol", "target_id": "pf-dhfr"}
-    )
-
+def test_screening_enqueues_a_job(client):
+    with patch("drugforge.web.jobs.submit", return_value="jid123") as submit:
+        response = client.post(
+            "/api/screenings", json={"molecule": "ethanol", "target_id": "pf-dhfr"}
+        )
     assert response.status_code == 200
-    body = response.json()
-    assert body["result_id"]
-    assert body["affinity_kcal_mol"] == -8.123
-    assert body["consensus_score"] == 1.03
-    assert body["disclaimer"]
+    assert response.json() == {"job_id": "jid123", "status": "queued"}
+    submit.assert_called_once()
 
 
-@patch("drugforge.web.routes.screening.run_screening")
-def test_stored_result_is_retrievable(mock_run, client, screening_result):
-    mock_run.return_value = screening_result
-    created = client.post(
-        "/api/screenings", json={"molecule": "ethanol", "target_id": "pf-dhfr"}
-    ).json()
+def test_unknown_job_is_not_found(client):
+    assert client.get("/api/jobs/absent").status_code == 404
 
-    fetched = client.get(f"/api/screenings/{created['result_id']}")
+
+def _run_job_now(job_id="test-job", molecule="ethanol"):
+    """Seed and run one job synchronously, bypassing the worker thread."""
+    jobs._jobs[job_id] = {"status": "queued", "position": 0, "result_id": None, "error": None}
+    jobs._run(job_id, molecule, "pf-dhfr", 8)
+    return job_id
+
+
+def test_job_runs_stores_and_result_is_retrievable(client, screening_result):
+    with patch("drugforge.web.jobs.run_screening", return_value=screening_result):
+        job_id = _run_job_now()
+
+    job = client.get(f"/api/jobs/{job_id}").json()
+    assert job["status"] == "done"
+    result_id = job["result_id"]
+    assert result_id
+
+    fetched = client.get(f"/api/screenings/{result_id}")
     assert fetched.status_code == 200
     assert fetched.json()["molecule_smiles"] == "CCO"
 
 
-@patch("drugforge.web.routes.screening.run_screening")
-def test_report_downloads_as_pdf(mock_run, client, screening_result):
-    mock_run.return_value = screening_result
-    created = client.post(
-        "/api/screenings", json={"molecule": "ethanol", "target_id": "pf-dhfr"}
-    ).json()
+def test_report_downloads_as_pdf(client, screening_result):
+    with patch("drugforge.web.jobs.run_screening", return_value=screening_result):
+        job_id = _run_job_now(job_id="report-job")
+    result_id = client.get(f"/api/jobs/{job_id}").json()["result_id"]
 
-    response = client.get(f"/api/screenings/{created['result_id']}/report")
+    response = client.get(f"/api/screenings/{result_id}/report")
     assert response.status_code == 200
     assert "application/pdf" in response.headers["content-type"]
     assert "attachment" in response.headers["content-disposition"]
@@ -108,24 +109,23 @@ def test_missing_result_is_not_found(client):
 
 
 @pytest.mark.parametrize(
-    ("cause", "expected_status"),
+    ("cause", "stage"),
     [
-        (ValidationError("bad molecule"), 422),
-        (TargetNotFoundError("no target"), 404),
-        (ReceptorError("rcsb down"), 502),
-        (DockingError("vina crashed"), 500),
+        (ValidationError("bad molecule"), "validate"),
+        (DockingError("vina crashed"), "docking"),
     ],
 )
-@patch("drugforge.web.routes.screening.run_screening")
-def test_pipeline_failures_map_to_status_codes(
-    mock_run, client, cause, expected_status
-):
-    mock_run.side_effect = PipelineError(stage="validate", cause=cause)
-    response = client.post(
-        "/api/screenings", json={"molecule": "x", "target_id": "pf-dhfr"}
-    )
-    assert response.status_code == expected_status
-    assert response.json()["detail"]["stage"] == "validate"
+def test_job_reports_pipeline_errors(screening_result, cause, stage):
+    with patch(
+        "drugforge.web.jobs.run_screening",
+        side_effect=PipelineError(stage=stage, cause=cause),
+    ):
+        _run_job_now(job_id="err-job", molecule="x")
+
+    job = jobs.get("err-job")
+    assert job["status"] == "error"
+    assert job["error"]["stage"] == stage
+    assert job["error"]["detail"]
 
 
 def test_request_validation_rejects_an_empty_molecule(client):

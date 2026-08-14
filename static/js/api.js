@@ -38,6 +38,10 @@ const API = {
         return this._get(`/api/screenings/${encodeURIComponent(id)}`);
     },
 
+    getJob(jobId) {
+        return this._get(`/api/jobs/${encodeURIComponent(jobId)}`);
+    },
+
     async submitScreening(molecule, targetId, exhaustiveness) {
         const response = await fetch("/api/screenings", {
             method: "POST",

@@ -84,8 +84,12 @@ def _migrate(connection: sqlite3.Connection) -> None:
 def connect() -> Iterator[sqlite3.Connection]:
     """Open a migrated connection, committing on success."""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    connection = sqlite3.connect(str(DB_PATH))
+    connection = sqlite3.connect(str(DB_PATH), timeout=10)
     connection.row_factory = sqlite3.Row
+    # WAL lets many readers run while the docking worker writes; the busy timeout
+    # avoids "database is locked" under concurrent users.
+    connection.execute("PRAGMA journal_mode=WAL")
+    connection.execute("PRAGMA busy_timeout=5000")
     try:
         _migrate(connection)
         yield connection

@@ -2,13 +2,17 @@
 // a central 3D workspace, and a right inspector. Wired to POST /api/screenings and
 // GET /api/screenings/:id. Live target structure before a run, docked pose after.
 const LabPage = {
-    state: { targets: [], compounds: [], activeTargetId: null, result: null, loading: false, error: null },
+    state: { targets: [], compounds: [], activeTargetId: null, result: null, running: false, error: null, queuePos: null },
 
     async render(mountEl, params) {
         this.mountEl = mountEl;
         this.state.result = null;
-        this.state.loading = true;
-        this.paint();
+        this.state.running = false;
+        this.state.error = null;
+        this.state.queuePos = null;
+        if (!this.state.targets.length) {
+            this.mountEl.innerHTML = AppShell.shell(`<div class="p-8 font-body-sm text-body-sm text-on-surface-variant">Loading lab...</div>`);
+        }
         try {
             this.state.targets = await API.getTargets();
             this.state.compounds = await API.getCompounds();
@@ -16,7 +20,6 @@ const LabPage = {
         } catch (e) {
             this.state.error = e.message;
         }
-        this.state.loading = false;
         if (params.resultId) {
             await this.loadResult(params.resultId);
         } else {
@@ -25,8 +28,6 @@ const LabPage = {
     },
 
     async loadResult(id) {
-        this.state.loading = true;
-        this.paint();
         try {
             this.state.result = await API.getScreening(id);
             this.state.error = null;
@@ -34,7 +35,7 @@ const LabPage = {
             this.state.error = e.message;
             this.state.result = null;
         }
-        this.state.loading = false;
+        this.state.running = false;
         this.paint();
     },
 
@@ -46,17 +47,45 @@ const LabPage = {
             this.paint();
             return;
         }
-        this.state.loading = true;
+        this.state.running = true;
         this.state.error = null;
+        this.state.queuePos = null;
         this.paint();
         try {
-            const result = await API.submitScreening(molecule, this.state.activeTargetId, exhaustiveness);
-            Router.navigate(`/result/${result.result_id}`);
+            const job = await API.submitScreening(molecule, this.state.activeTargetId, exhaustiveness);
+            this._poll(job.job_id);
         } catch (e) {
             this.state.error = e.message;
-            this.state.loading = false;
+            this.state.running = false;
             this.paint();
         }
+    },
+
+    async _poll(jobId) {
+        let job;
+        try {
+            job = await API.getJob(jobId);
+        } catch (e) {
+            setTimeout(() => this._poll(jobId), 3000);
+            return;
+        }
+        if (job.status === "done") {
+            this.state.running = false;
+            Router.navigate(`/result/${job.result_id}`);
+            return;
+        }
+        if (job.status === "error") {
+            this.state.running = false;
+            const err = job.error || {};
+            this.state.error = err.detail
+                ? `Docking failed${err.stage ? ` at ${err.stage}` : ""}: ${err.detail}`
+                : "Docking failed.";
+            this.paint();
+            return;
+        }
+        this.state.queuePos = job.position ?? null;
+        this.paint();
+        setTimeout(() => this._poll(jobId), 3000);
     },
 
     selectTarget(id) {
@@ -78,7 +107,7 @@ const LabPage = {
         if (this.state.result?.pose_sdf) {
             const t = this.state.targets.find((x) => x.id === this.state.result.target_id);
             Viewer3D.renderResult("viewer-3d", this.state.result.pose_sdf, t?.pdb_id);
-        } else if (!this.state.loading) {
+        } else if (!this.state.running) {
             this.previewTarget();
         }
     },
@@ -133,7 +162,7 @@ const LabPage = {
         ${this.state.error ? `<div class="mx-5 mt-4 p-3 bg-error-container text-on-error-container rounded-xl font-body-sm text-body-sm">${escapeHtml(this.state.error)}</div>` : ""}
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_360px] min-h-0">
             <section class="flex flex-col gap-5 p-5 min-w-0 border-b lg:border-b-0 lg:border-r border-outline-variant">
-                ${this.state.loading && !r ? this.loadingBlock() : this.workspace(active, r)}
+                ${this.state.running ? this.loadingBlock() : this.workspace(active, r)}
             </section>
             <aside class="p-5 flex flex-col gap-5 bg-surface-container-lowest">
                 ${r ? this.inspector(r) : this.inspectorEmpty(active)}
@@ -169,9 +198,9 @@ const LabPage = {
                     <input id="exhaustiveness-input" type="number" min="1" max="16" value="8"
                         class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant rounded-xl font-code-md text-code-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
                 </div>
-                <button id="run-docking-btn" ${this.state.loading ? "disabled" : ""}
+                <button id="run-docking-btn" ${this.state.running ? "disabled" : ""}
                     class="bg-primary text-on-primary py-2.5 px-6 rounded-xl hover:bg-deep-navy transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-60">
-                    <span class="material-symbols-outlined text-[20px]">play_arrow</span>${this.state.loading ? "Running" : "Run"}
+                    <span class="material-symbols-outlined text-[20px]">play_arrow</span>${this.state.running ? "Running" : "Run"}
                 </button>
             </div>
             ${chips ? `<div class="flex items-center gap-2 mt-3 overflow-x-auto"><span class="font-label-caps text-label-caps text-on-surface-variant uppercase shrink-0">Try</span>${chips}</div>` : ""}
@@ -232,11 +261,17 @@ const LabPage = {
     },
 
     loadingBlock() {
+        const q = this.state.queuePos;
+        const queueLine =
+            q && q > 0
+                ? `<p class="mt-2 font-body-sm text-body-sm text-primary">${q} run${q > 1 ? "s" : ""} ahead of you in the queue.</p>`
+                : "";
         return `<div class="flex-1 flex items-center justify-center py-20 bg-surface-container-lowest border border-outline-variant rounded-2xl">
             <div class="text-center">
                 <span class="material-symbols-outlined animate-spin text-primary text-4xl">progress_activity</span>
                 <p class="mt-3 font-body-md text-body-md text-on-surface">Docking in progress</p>
                 <p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">A real Vina run takes one to two minutes.</p>
+                ${queueLine}
             </div>
         </div>`;
     },
