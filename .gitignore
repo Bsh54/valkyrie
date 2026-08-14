@@ -28,3 +28,6 @@ dist/
 .DS_Store
 .idea/
 *.swp
+
+# Private context handoff, not part of the submission
+CONTEXT-FOR-KIRO.md
