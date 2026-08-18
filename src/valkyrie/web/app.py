@@ -51,7 +51,7 @@ def create_app() -> FastAPI:
                 lambda: FileResponse(index_path)
             )
 
-        for asset_dir in ("js", "css"):
+        for asset_dir in ("js", "css", "img"):
             asset_path = STATIC_DIR / asset_dir
             if asset_path.is_dir():
                 app.mount(

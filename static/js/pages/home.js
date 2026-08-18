@@ -39,6 +39,7 @@ const HomePage = {
         <section class="w-full max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 flex flex-col items-center text-center relative overflow-hidden">
             <div class="absolute inset-0 opacity-[0.07] pointer-events-none z-0" style="background-image:radial-gradient(#00478d 1px, transparent 1px);background-size:26px 26px;"></div>
             <div class="z-10 max-w-3xl space-y-7">
+                <img src="/img/logo-mark.png" alt="Valkyrie" class="h-20 w-20 md:h-24 md:w-24 object-contain mx-auto" />
                 <h1 class="font-display text-[40px] md:text-[64px] leading-[1.05] text-on-surface tracking-tight">
                     Find medicines for the diseases <span class="text-primary italic">the world forgot.</span>
                 </h1>

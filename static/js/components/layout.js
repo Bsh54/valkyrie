@@ -25,7 +25,7 @@ const Layout = {
             <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto h-16">
                 <div class="flex items-center gap-10">
                     <a data-link href="/" class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2">
-                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>
+                        <img src="/img/logo-mark.png" alt="Valkyrie" class="h-7 w-7 object-contain" />
                         Valkyrie
                     </a>
                     <nav class="hidden md:flex gap-8 items-center h-16">${desktopLinks}</nav>
@@ -67,7 +67,7 @@ const Layout = {
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     <div class="col-span-2 md:col-span-1">
                         <div class="font-headline-md text-headline-md text-primary flex items-center gap-2 mb-3">
-                            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>
+                            <img src="/img/logo-mark.png" alt="Valkyrie" class="h-7 w-7 object-contain" />
                             Valkyrie
                         </div>
                         <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">
@@ -118,7 +118,7 @@ const AppShell = {
         return `
         <aside class="hidden md:flex flex-col w-56 shrink-0 border-r border-outline-variant bg-surface-container-lowest sticky top-0 h-screen">
             <a data-link href="/" class="flex items-center gap-2 h-16 px-4 border-b border-outline-variant font-headline-md text-headline-md font-bold text-primary shrink-0">
-                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>Valkyrie
+                <img src="/img/logo-mark.png" alt="Valkyrie" class="h-7 w-7 object-contain" />Valkyrie
             </a>
             <nav class="flex flex-col gap-1 p-3">${items}</nav>
             <div class="mt-auto p-3 border-t border-outline-variant flex flex-col gap-1">
@@ -145,7 +145,7 @@ const AppShell = {
         return `
         <div class="md:hidden flex items-center gap-2 h-14 px-4 border-b border-outline-variant bg-surface-container-lowest overflow-x-auto">
             <a data-link href="/" class="font-headline-md text-body-lg font-bold text-primary flex items-center gap-1 shrink-0 mr-2">
-                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1;">science</span>
+                <img src="/img/logo-mark.png" alt="Valkyrie" class="h-6 w-6 object-contain" />
             </a>
             ${items}
         </div>`;
