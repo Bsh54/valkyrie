@@ -15,18 +15,18 @@ prediction that requires laboratory validation. Docking is the first step of man
 
 The screening funnel is identical for every target:
 
-| Stage | Tool | Runs on |
-|---|---|---|
-| Resolve name or SMILES | Local registry, then PubChem | CPU |
-| Prepare ligand | RDKit ETKDGv3 + MMFF, Meeko, pH 7.4 | CPU |
-| Prepare receptor | RCSB download, cofactors kept, Open Babel, pH 7.4 | CPU |
-| Dock | AutoDock Vina | CPU |
-| Rescore | Vinardo on the same pose | CPU |
-| Consensus | Weighted, reference-normalised | CPU |
-| Drug-likeness | Lipinski, Veber | CPU |
-| ADMET and toxicity | PAINS, Brenk, NIH, ESOL | CPU |
-| Compare to reference | Every metric, with deltas | CPU |
-| Explanation | DeepSeek, grounded in the computed data and the plant's traditional use | remote |
+| Stage | Tool |
+|---|---|
+| Resolve name or SMILES | Local registry, then PubChem |
+| Prepare ligand | RDKit ETKDGv3 + MMFF, Meeko, pH 7.4 |
+| Prepare receptor | RCSB download, cofactors kept, Open Babel, pH 7.4 |
+| Dock | AutoDock Vina |
+| Rescore | Vinardo on the same pose |
+| Consensus | Weighted, reference-normalised |
+| Drug-likeness | Lipinski, Veber |
+| ADMET and toxicity | PAINS, Brenk, NIH, ESOL |
+| Compare to reference | Every metric, with deltas |
+| Explanation | DeepSeek, grounded in the computed data and the plant's traditional use |
 
 The explanation stage is optional. Without an API key it reports its status and the
 physics-based result is returned unchanged.
