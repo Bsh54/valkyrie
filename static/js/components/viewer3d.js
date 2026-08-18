@@ -124,7 +124,7 @@ const Viewer3D = {
             const uri = this._viewer.pngURI();
             const a = document.createElement("a");
             a.href = uri;
-            a.download = "drugforge-pose.png";
+            a.download = "valkyrie-pose.png";
             document.body.appendChild(a);
             a.click();
             a.remove();

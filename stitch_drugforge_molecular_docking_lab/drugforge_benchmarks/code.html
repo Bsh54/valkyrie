@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Benchmarks - DrugForge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500;700&amp;family=Public+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#005eb8",
+                      "surface-container": "#eceef0",
+                      "background": "#f7f9fb",
+                      "on-secondary-fixed-variant": "#004f54",
+                      "warning-energy": "#F97316",
+                      "on-primary-fixed-variant": "#00468c",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#ffdbcb",
+                      "on-surface-variant": "#424752",
+                      "on-tertiary-fixed": "#341100",
+                      "surface-variant": "#e0e3e5",
+                      "primary-fixed": "#d6e3ff",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#191c1e",
+                      "error": "#ba1a1a",
+                      "success-docking": "#22C55E",
+                      "on-primary-container": "#c8daff",
+                      "on-secondary-fixed": "#002022",
+                      "on-surface": "#191c1e",
+                      "surface": "#f7f9fb",
+                      "secondary-fixed-dim": "#5dd8e2",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary-container": "#006e75",
+                      "on-tertiary-fixed-variant": "#793100",
+                      "surface-dim": "#d8dadc",
+                      "on-primary-fixed": "#001b3d",
+                      "secondary-fixed": "#7df4ff",
+                      "tertiary-container": "#9f4300",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#00478d",
+                      "structural-blue": "#5E94C3",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#a9c7ff",
+                      "secondary-container": "#7af1fc",
+                      "on-error": "#ffffff",
+                      "tertiary": "#793100",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "secondary": "#006970",
+                      "deep-navy": "#325880",
+                      "surface-container-low": "#f2f4f6",
+                      "inverse-primary": "#a9c7ff",
+                      "surface-container-highest": "#e0e3e5",
+                      "outline-variant": "#c2c6d4",
+                      "inverse-surface": "#2d3133",
+                      "outline": "#727783",
+                      "surface-tint": "#005db6",
+                      "molecular-green": "#5D864F",
+                      "on-tertiary-container": "#ffcfb9",
+                      "surface-bright": "#f7f9fb",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "max-width": "1440px",
+                      "margin-mobile": "16px",
+                      "base": "4px",
+                      "gutter": "24px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Public Sans"
+                      ],
+                      "headline-md": [
+                              "Public Sans"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "code-md": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-xl": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .chart-grid {
+            background-image: 
+                linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+      </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="flex items-center gap-8">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                DrugForge
+            </div>
+<div class="hidden md:flex gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Lab</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Library</a>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 Active: opacity-80 transition-opacity" href="#">Benchmarks</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Docs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-body-md text-body-md bg-primary text-on-primary px-4 py-2 rounded">Sign In</button>
+</div>
+</nav>
+<div class="flex-1 max-w-max-width mx-auto w-full flex flex-col md:flex-row">
+<!-- Main Content Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto">
+<header class="mb-gutter">
+<h1 class="font-headline-xl text-headline-xl text-primary mb-2">Scientific Benchmarks</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+                    Performance metrics and validation data for DrugForge's docking algorithms. We believe in Open Data and Reproducible Pipelines. All results are verifiable under CC-BY 4.0 License.
+                </p>
+</header>
+<!-- Bento Grid Layout for Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-gutter">
+<!-- Redocking RMSD -->
+<div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-6 shadow-sm flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Internal Validation: Redocking RMSD</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Distribution of root-mean-square deviation for self-docking tests across 5,000+ PDB complexes.</p>
+</div>
+<span class="bg-success-docking/10 text-success-docking font-label-caps text-label-caps px-2 py-1 rounded-full border border-success-docking/20 flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
+                            PASS
+                        </span>
+</div>
+<div class="flex-1 relative min-h-[300px] chart-grid rounded border border-outline-variant/30 flex items-end p-4">
+<!-- Simulated Histogram using flex bars -->
+<div class="w-full h-[250px] flex items-end gap-1 px-4 relative z-10">
+<!-- Y-axis labels -->
+<div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-outline pr-2 font-code-md">
+<span>1500</span>
+<span>1000</span>
+<span>500</span>
+<span>0</span>
+</div>
+<!-- Threshold Line -->
+<div class="absolute left-8 right-4 top-[50px] border-t border-dashed border-error z-0 flex items-center">
+<span class="bg-error text-on-error text-[10px] px-1 ml-auto -mt-3 mr-2 font-label-caps rounded-sm">2.0Å THRESHOLD</span>
+</div>
+<div class="ml-6 flex-1 flex items-end gap-1 h-full pt-10">
+<div class="w-1/12 bg-primary/20 h-[10%] rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">0.0 - 0.5Å: 120</div>
+</div>
+<div class="w-1/12 bg-primary/40 h-[30%] rounded-t-sm hover:bg-primary/60 transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">0.5 - 1.0Å: 450</div>
+</div>
+<div class="w-1/12 bg-primary h-[85%] rounded-t-sm hover:bg-primary/90 transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">1.0 - 1.5Å: 1420</div>
+</div>
+<div class="w-1/12 bg-primary/80 h-[60%] rounded-t-sm hover:bg-primary transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">1.5 - 2.0Å: 980</div>
+</div>
+<!-- Past 2.0A Threshold -->
+<div class="w-1/12 bg-warning-energy/50 h-[25%] rounded-t-sm hover:bg-warning-energy transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">2.0 - 2.5Å: 310</div>
+</div>
+<div class="w-1/12 bg-warning-energy/40 h-[15%] rounded-t-sm hover:bg-warning-energy/80 transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">2.5 - 3.0Å: 180</div>
+</div>
+<div class="w-1/12 bg-error/40 h-[8%] rounded-t-sm hover:bg-error/80 transition-colors cursor-pointer group relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">3.0 - 3.5Å: 90</div>
+</div>
+<div class="w-1/12 bg-error/20 h-[5%] rounded-t-sm hover:bg-error/60 transition-colors cursor-pointer group relative"></div>
+<div class="w-1/12 bg-error/10 h-[2%] rounded-t-sm"></div>
+<div class="w-1/12 bg-error/10 h-[1%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between px-10 text-[10px] font-code-md text-outline mt-2">
+<span>0.0Å</span>
+<span>1.0Å</span>
+<span class="text-error font-bold">2.0Å</span>
+<span>3.0Å</span>
+<span>4.0Å</span>
+<span>5.0Å+</span>
+</div>
+<div class="mt-4 flex gap-4 text-xs font-body-sm">
+<div class="flex items-center gap-2"><div class="w-3 h-3 bg-primary rounded-sm"></div> &lt; 2.0Å (Success)</div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 bg-warning-energy/50 rounded-sm"></div> 2.0Å - 3.0Å (Marginal)</div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 bg-error/40 rounded-sm"></div> &gt; 3.0Å (Failed)</div>
+</div>
+</div>
+<!-- AUC Stats -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 shadow-sm flex-1">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Enrichment AUC</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">ROC curve analysis across standard targets.</p>
+<!-- Simulated ROC Curve area -->
+<div class="relative w-full aspect-square chart-grid border-l border-b border-outline-variant flex items-center justify-center bg-surface">
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Random guess line -->
+<line class="text-outline/50" stroke="currentColor" stroke-dasharray="4" stroke-width="1" x1="0" x2="100" y1="100" y2="0"></line>
+<!-- Target 1 Curve -->
+<path d="M 0 100 Q 10 30 50 10 T 100 0" fill="none" stroke="#00478d" stroke-width="2"></path>
+<!-- Target 2 Curve -->
+<path d="M 0 100 Q 20 50 60 20 T 100 0" fill="none" stroke="#5E94C3" stroke-dasharray="2 2" stroke-width="1.5"></path>
+</svg>
+<div class="absolute bottom-2 right-2 flex flex-col gap-1 text-[10px] font-code-md bg-surface/80 p-1 rounded border border-outline-variant">
+<div class="flex items-center gap-1"><div class="w-2 h-2 bg-primary rounded-full"></div> CDK2 (0.89)</div>
+<div class="flex items-center gap-1"><div class="w-2 h-2 bg-structural-blue rounded-full"></div> EGFR (0.76)</div>
+</div>
+</div>
+</div>
+<div class="bg-deep-navy text-on-primary rounded-lg p-6 flex flex-col justify-center relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined" style="font-size: 120px;">account_tree</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2 relative z-10">External Set</h3>
+<div class="text-4xl font-bold font-code-md mb-1 relative z-10">84.2%</div>
+<p class="font-body-sm text-body-sm opacity-80 relative z-10">Top-1 Success Rate on independent DUD-E subsets.</p>
+</div>
+</div>
+</div>
+<!-- Honest Reporting Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden mb-gutter">
+<div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">verified_user</span>
+                        Honest Reporting Registry
+                    </h2>
+<button class="text-sm font-code-md text-primary hover:underline flex items-center gap-1">
+                        Download CSV <span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant">
+<th class="p-3 w-1/4">Target Family</th>
+<th class="p-3 w-1/4">Example Target</th>
+<th class="p-3 w-1/4">Performance Status</th>
+<th class="p-3 w-1/4">Known Limitations / Notes</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm">
+<tr class="border-b border-outline-variant/50 hover:bg-primary-fixed/20 transition-colors">
+<td class="p-3 font-code-md text-on-surface">Kinases</td>
+<td class="p-3">CDK2, EGFR, BRAF</td>
+<td class="p-3">
+<span class="bg-success-docking/10 text-success-docking px-2 py-1 rounded font-code-md text-xs border border-success-docking/20">HIGH RELIABILITY</span>
+</td>
+<td class="p-3 text-on-surface-variant">Excellent scoring for Type I inhibitors. Type II requires explicit DFG-out conformation input.</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-primary-fixed/20 transition-colors">
+<td class="p-3 font-code-md text-on-surface">Proteases</td>
+<td class="p-3">HIV Protease, Thrombin</td>
+<td class="p-3">
+<span class="bg-success-docking/10 text-success-docking px-2 py-1 rounded font-code-md text-xs border border-success-docking/20">HIGH RELIABILITY</span>
+</td>
+<td class="p-3 text-on-surface-variant">Robust performance. Water network prediction strongly recommended for accurate affinities.</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-primary-fixed/20 transition-colors bg-surface-container/30">
+<td class="p-3 font-code-md text-on-surface">GPCRs</td>
+<td class="p-3">A2A Receptor, D3 Receptor</td>
+<td class="p-3">
+<span class="bg-warning-energy/10 text-warning-energy px-2 py-1 rounded font-code-md text-xs border border-warning-energy/20">MODERATE</span>
+</td>
+<td class="p-3 text-on-surface-variant">Sensitive to initial membrane embedding assumptions. Induced fit effects often underestimated.</td>
+</tr>
+<tr class="hover:bg-primary-fixed/20 transition-colors bg-error-container/10">
+<td class="p-3 font-code-md text-on-surface">Metalloproteins</td>
+<td class="p-3">MMPs, Carbonic Anhydrase</td>
+<td class="p-3">
+<span class="bg-error/10 text-error px-2 py-1 rounded font-code-md text-xs border border-error/20">KNOWN LIMITATION</span>
+</td>
+<td class="p-3 text-on-surface-variant">Standard forcefield underestimates metal coordination geometries. Use specialized metal parameter sets.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline w-full py-8 px-margin-desktop mt-auto">
+<div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-headline-md text-headline-md text-primary">
+                DrugForge
+            </div>
+<div class="flex gap-6 font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant">
+<a class="hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">API Reference</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Citations</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">GitHub</a>
+<a class="hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Privacy</a>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface dark:text-surface-bright">
+                © 2024 DrugForge Lab. CC-BY 4.0 License.
+            </div>
+</div>
+</footer>
+</body></html>

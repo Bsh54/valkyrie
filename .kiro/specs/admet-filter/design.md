@@ -79,7 +79,7 @@ class ADMETResult:
 ## 4. Module Structure
 
 ```
-drugforge/
+valkyrie/
 ├── admet.py          # NEW — ADMET computation + filter logic
 └── pipeline.py       # MODIFIED — adds ADMET stage after drug-likeness
 ```

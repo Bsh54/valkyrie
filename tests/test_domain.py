@@ -4,9 +4,9 @@ import dataclasses
 
 import pytest
 
-from drugforge.domain.models import IN_SILICO_DISCLAIMER, DockingBox, Target
-from drugforge.domain.targets import TARGETS, get_target, list_targets
-from drugforge.errors import TargetNotFoundError
+from valkyrie.domain.models import IN_SILICO_DISCLAIMER, DockingBox, Target
+from valkyrie.domain.targets import TARGETS, get_target, list_targets
+from valkyrie.errors import TargetNotFoundError
 
 
 def test_registry_is_not_empty():

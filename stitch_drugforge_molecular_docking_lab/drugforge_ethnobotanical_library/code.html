@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ethnobotanical Library | DrugForge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#005eb8",
+                    "surface-container": "#eceef0",
+                    "background": "#f7f9fb",
+                    "on-secondary-fixed-variant": "#004f54",
+                    "warning-energy": "#F97316",
+                    "on-primary-fixed-variant": "#00468c",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-surface-variant": "#424752",
+                    "on-tertiary-fixed": "#341100",
+                    "surface-variant": "#e0e3e5",
+                    "primary-fixed": "#d6e3ff",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error": "#ba1a1a",
+                    "success-docking": "#22C55E",
+                    "on-primary-container": "#c8daff",
+                    "on-secondary-fixed": "#002022",
+                    "on-surface": "#191c1e",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed-dim": "#5dd8e2",
+                    "surface-container-high": "#e6e8ea",
+                    "on-secondary-container": "#006e75",
+                    "on-tertiary-fixed-variant": "#793100",
+                    "surface-dim": "#d8dadc",
+                    "on-primary-fixed": "#001b3d",
+                    "secondary-fixed": "#7df4ff",
+                    "tertiary-container": "#9f4300",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#00478d",
+                    "structural-blue": "#5E94C3",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "secondary-container": "#7af1fc",
+                    "on-error": "#ffffff",
+                    "tertiary": "#793100",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "secondary": "#006970",
+                    "deep-navy": "#325880",
+                    "surface-container-low": "#f2f4f6",
+                    "inverse-primary": "#a9c7ff",
+                    "surface-container-highest": "#e0e3e5",
+                    "outline-variant": "#c2c6d4",
+                    "inverse-surface": "#2d3133",
+                    "outline": "#727783",
+                    "surface-tint": "#005db6",
+                    "molecular-green": "#5D864F",
+                    "on-tertiary-container": "#ffcfb9",
+                    "surface-bright": "#f7f9fb",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "max-width": "1440px",
+                    "margin-mobile": "16px",
+                    "base": "4px",
+                    "gutter": "24px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Public Sans"],
+                    "headline-md": ["Public Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "code-md": ["JetBrains Mono"],
+                    "headline-xl": ["Public Sans"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="flex items-center gap-gutter">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">DrugForge</div>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md py-5 border-b-2 border-transparent" href="#">Lab</a>
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 font-body-md text-body-md py-5 opacity-80 transition-opacity" href="#">Library</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md py-5 border-b-2 border-transparent" href="#">Benchmarks</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md py-5 border-b-2 border-transparent" href="#">Docs</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-full text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary font-body-md text-body-md px-4 py-2 rounded-lg hover:bg-surface-tint transition-colors">Sign In</button>
+</div>
+</header>
+<div class="flex flex-1 max-w-max-width mx-auto w-full">
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
+<!-- Featured Section -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-1 space-y-4">
+<span class="inline-block bg-primary-container/10 text-primary px-3 py-1 rounded-full font-label-caps text-label-caps uppercase">Ethnobotanical Library</span>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Bridging Traditional Knowledge with Molecular Validation.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                        Explore our curated catalog of medicinal plants. Select natural compounds validated by traditional use and seamlessly pipe them into the docking simulator for in-silico validation.
+                    </p>
+</div>
+<div class="w-full md:w-1/3 aspect-video md:aspect-square rounded-lg overflow-hidden border border-outline-variant shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A pristine, highly detailed 3D molecular structure of a complex plant-derived alkaloid, rendered in bright, glossy structural-blue and molecular-green against a stark white sterile laboratory background. The lighting is high-key and scientific, emphasizing precision and modern pharmaceutical research. The overall mood is clinical and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD--KggaNaNaVhSwSsQDzb_MWV72sYFFR_i1IRVs019tIVZcGB6xH2riQz5ac7bEyB2ocWmxOrh16gfRMQZe7PcYnQ1K_-efPFOOkqUcL05m-Ztqe2rNazGAuxBIAx0Ii50oYOmq8RthNQWKf5Ed0SIBg6XyOMe4XX5obniQkDA9ra7a9eg5PL4FuChXXuiyPkoUPbX_e5zyzwAoaXvbKIvkhQ-TfuzZr2kR1PNC0fTnkGehj5tUew6Ww"/>
+</div>
+</section>
+<!-- Search and Filter Bar -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 flex flex-col md:flex-row gap-4 items-center justify-between sticky top-16 z-40 shadow-[0px_4px_12px_rgba(0,0,0,0.03)]">
+<div class="flex-1 relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search by botanical name, local name, or SMILES..." type="text"/>
+</div>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<div class="relative w-full md:w-48">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 pr-10 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option value="">Filter by Disease</option>
+<option value="malaria">Malaria</option>
+<option value="chagas">Chagas Disease</option>
+<option value="leishmania">Leishmaniasis</option>
+<option value="dengue">Dengue Fever</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+<div class="relative w-full md:w-48">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 pr-10 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<option value="">Filter by Region</option>
+<option value="w-africa">West Africa</option>
+<option value="amazon">Amazon Basin</option>
+<option value="se-asia">Southeast Asia</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+</section>
+<!-- Plant Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col group hover:shadow-[0px_8px_24px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="h-48 relative border-b border-outline-variant bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A vivid, high-resolution botanical illustration of Cryptolepis sanguinolenta roots against a pure white background, styled like a modern scientific herbarium specimen. Subtle glowing overlay lines suggest underlying molecular structures, blending traditional botany with high-tech computational chemistry aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7RbaFfJvV-eUTUvJ1h8n0642vbIgq-5OfOxWxgrWn6aXylUcguCZ9VD2VtmA1IfNJwMaaNL6fMaf8ekLJACzVUOsvcKhQWhiU6z6KZX0chuqYr-XLHZqMvFqJUTEC36WRIofttwa220ZGhdnr6EAJIo9j70BW8vX8cX9ZfKo_S-GhgZFRXCx0rdu6UXA4qWthu5kdmYgFzsHY9cLgp1Qpl3pWmXD3PkHXi1NuLgy1onrAAiIsnxZyxA"/>
+<div class="absolute top-2 right-2 bg-molecular-green/10 text-molecular-green px-2 py-1 rounded font-label-caps text-label-caps border border-molecular-green/20">
+                            Anti-Malarial
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface italic">Cryptolepis sanguinolenta</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Nibima (Ghana)</p>
+</div>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="public">public</span>
+<span>West Africa</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="science">science</span>
+<span>Cryptolepine (Active)</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex gap-2">
+<button class="flex-1 bg-primary text-on-primary font-body-sm text-body-sm px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="biotech">biotech</span>
+                                Dock Active Compound
+                            </button>
+<button class="px-3 py-2 border border-outline-variant rounded text-primary hover:bg-primary-container/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="info">info</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col group hover:shadow-[0px_8px_24px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="h-48 relative border-b border-outline-variant bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A vivid, high-resolution botanical illustration of Artemisia annua leaves against a pure white background, styled like a modern scientific herbarium specimen. Subtle glowing overlay lines suggest underlying molecular structures, blending traditional botany with high-tech computational chemistry aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeSHBgKZCRw9A6Ps7MTw51we_SMVdmRezY-55S6zsIdjVmm53src81mwua8TFdojT28_YkPUoDZF8nXFUdjsT10oiWM09EZHNFSD1RHlHGA9ve55Z6YnIZbBYorFKbz8TOl2njt5EoUMGnFjY5TRb3g4oFgAVkja9C-G9HDeS3noXi9uFFV5N_o1u00t2UC8eeN8DCo4GPBZSMeRoSav-3wzKEAat77UaQyXQt2y9UsKE6REXfvE7lPA"/>
+<div class="absolute top-2 right-2 bg-molecular-green/10 text-molecular-green px-2 py-1 rounded font-label-caps text-label-caps border border-molecular-green/20">
+                            Anti-Malarial
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface italic">Artemisia annua</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sweet Wormwood</p>
+</div>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="public">public</span>
+<span>East Asia</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="science">science</span>
+<span>Artemisinin (Active)</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex gap-2">
+<button class="flex-1 bg-primary text-on-primary font-body-sm text-body-sm px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="biotech">biotech</span>
+                                Dock Active Compound
+                            </button>
+<button class="px-3 py-2 border border-outline-variant rounded text-primary hover:bg-primary-container/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="info">info</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col group hover:shadow-[0px_8px_24px_rgba(0,0,0,0.08)] transition-shadow">
+<div class="h-48 relative border-b border-outline-variant bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A vivid, high-resolution botanical illustration of Cinchona officinalis bark against a pure white background, styled like a modern scientific herbarium specimen. Subtle glowing overlay lines suggest underlying molecular structures, blending traditional botany with high-tech computational chemistry aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzcCcjm758YaMl8NKXv7YnQhIrZKqiIwEwdEZbjqeo5bByicrZvXCn7OGws5vW7UVw5-W45iXSzQ3N0brf2oaLFH48uUtI8IWfFsvBIG3Iyp31vdVBE86zDCxemWXmQCgNgmAvMIp3gMPEKqIx9jxCpo2Z7HR1DpF5LQepxzMtadMUYKCCEyFxoufHnniF7SKWw-45dabi_UuTU_GobI4mxMrGdpejYMv3Q_nOmOSZrgX51efPYdCZrw"/>
+<div class="absolute top-2 right-2 bg-molecular-green/10 text-molecular-green px-2 py-1 rounded font-label-caps text-label-caps border border-molecular-green/20">
+                            Anti-Malarial
+                        </div>
+</div>
+<div class="p-4 flex-1 flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface italic">Cinchona officinalis</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Quina</p>
+</div>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="public">public</span>
+<span>Andes Mountains</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="science">science</span>
+<span>Quinine (Active)</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex gap-2">
+<button class="flex-1 bg-primary text-on-primary font-body-sm text-body-sm px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="biotech">biotech</span>
+                                Dock Active Compound
+                            </button>
+<button class="px-3 py-2 border border-outline-variant rounded text-primary hover:bg-primary-container/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="info">info</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline w-full py-8 px-margin-desktop mt-auto">
+<div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-headline-md text-headline-md text-primary">DrugForge</div>
+<div class="font-body-sm text-body-sm text-on-surface dark:text-surface-bright text-center md:text-left">
+                © 2024 DrugForge Lab. CC-BY 4.0 License.
+            </div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all font-body-sm text-body-sm" href="#">API Reference</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all font-body-sm text-body-sm" href="#">Citations</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all font-body-sm text-body-sm" href="#">GitHub</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all font-body-sm text-body-sm" href="#">Privacy</a>
+</div>
+</div>
+</footer>
+</body></html>

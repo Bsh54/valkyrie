@@ -8,8 +8,8 @@ neither is available in this deployment (8 GB VPS, CPU only). The stage does
 not appear anywhere in the pipeline, the funnel, or the UI.
 
 The `boltz` field remains on `ScreeningResult`
-(`src/drugforge/domain/models.py`) and an unused stub exists at
-`src/drugforge/ai/boltz.py`, kept only for forward compatibility so a future
+(`src/valkyrie/domain/models.py`) and an unused stub exists at
+`src/valkyrie/ai/boltz.py`, kept only for forward compatibility so a future
 implementation does not require a schema migration. Nothing populates the
 field in normal operation, and nothing in the frontend reads it
 (`web-ui` REQ-UI-17).

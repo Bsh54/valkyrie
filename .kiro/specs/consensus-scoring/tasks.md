@@ -16,7 +16,7 @@ Traces: REQ-CS-4, REQ-CS-5
 ---
 
 ## Task 2: Vinardo rescoring module
-- [ ] Create `drugforge/rescoring.py`:
+- [ ] Create `valkyrie/rescoring.py`:
       ```python
       def rescore_vinardo(
           ligand_pdbqt: str,
@@ -34,7 +34,7 @@ Traces: REQ-CS-1
 ---
 
 ## Task 3: Consensus scoring module
-- [ ] Create `drugforge/consensus.py`:
+- [ ] Create `valkyrie/consensus.py`:
       ```python
       @dataclass
       class ConsensusResult:
@@ -61,12 +61,12 @@ Traces: REQ-CS-2
 ---
 
 ## Task 4: Extend DockingResult and pipeline
-- [ ] Modify `drugforge/docking.py`: add `vinardo_score` field to `DockingResult`.
-- [ ] Modify `drugforge/pipeline.py`:
+- [ ] Modify `valkyrie/docking.py`: add `vinardo_score` field to `DockingResult`.
+- [ ] Modify `valkyrie/pipeline.py`:
       - After docking, call `rescore_vinardo()` on the best pose.
       - Compute consensus using reference drug scores (cached).
       - Add `consensus_score` to `PipelineResult`.
-- [ ] Modify `drugforge/comparator.py`: include consensus in comparison table.
+- [ ] Modify `valkyrie/comparator.py`: include consensus in comparison table.
 
 Traces: REQ-CS-1, REQ-CS-2
 
@@ -80,7 +80,7 @@ Traces: REQ-CS-1, REQ-CS-2
         "inactives": ["glucose", "ethanol", "caffeine", "aspirin", "ibuprofen"]
       }
       ```
-- [ ] Create `drugforge/benchmarks.py`:
+- [ ] Create `valkyrie/benchmarks.py`:
       - `run_benchmark(target_id) -> BenchmarkResult`
       - Dock all actives + inactives, compute AUC-ROC for Vina-only vs consensus.
       - Report EF@10%.
@@ -92,7 +92,7 @@ Traces: REQ-CS-3
 ---
 
 ## Task 6: API endpoint
-- [ ] Add `GET /api/benchmarks/{target_id}` to `drugforge/api.py`:
+- [ ] Add `GET /api/benchmarks/{target_id}` to `valkyrie/api.py`:
       - Returns latest benchmark results (AUC, EF, honest comparison).
       - Includes disclaimer: "In-silico benchmark — not a clinical validation."
 - [ ] Update `POST /api/dock` response to include `vinardo_score` and

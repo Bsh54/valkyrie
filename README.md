@@ -1,4 +1,4 @@
-# DrugForge
+# Valkyrie
 
 An online molecular-docking laboratory for neglected tropical diseases: malaria,
 Chagas disease, leishmaniasis and sleeping sickness.
@@ -7,7 +7,7 @@ You submit a molecule by common name or SMILES. It is docked in real time agains
 a validated disease protein target with AutoDock Vina, rescored, filtered, and
 reported next to the target's reference drug.
 
-**DrugForge prioritises candidate molecules. It does not discover or prove drugs,
+**Valkyrie prioritises candidate molecules. It does not discover or prove drugs,
 and it never gives clinical advice.** Every number it produces is an in-silico
 prediction that requires laboratory validation. Docking is the first step of many.
 
@@ -47,8 +47,8 @@ brew install open-babel
 ## Install
 
 ```bash
-git clone <repository-url> drugforge
-cd drugforge
+git clone <repository-url> valkyrie
+cd valkyrie
 
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
@@ -60,19 +60,19 @@ pip install -e ".[dev]"
 
 ```bash
 # List available targets
-drugforge targets
+valkyrie targets
 
 # Screen a molecule against Plasmodium falciparum DHFR
-drugforge screen artemisinin --target pf-dhfr
+valkyrie screen artemisinin --target pf-dhfr
 
 # Faster, less thorough search, useful while developing
-drugforge screen cryptolepine --exhaustiveness 4
+valkyrie screen cryptolepine --exhaustiveness 4
 
 # Full result as JSON
-drugforge screen "Nc1nc(N)c(-c2ccc(Cl)cc2)cn1" --json
+valkyrie screen "Nc1nc(N)c(-c2ccc(Cl)cc2)cn1" --json
 
 # Serve the web interface at http://127.0.0.1:8100
-drugforge serve
+valkyrie serve
 ```
 
 A screening run takes roughly one to two minutes on four cores. The first run for
@@ -86,11 +86,11 @@ application runs without any API key.
 | Variable | Default | Purpose |
 |---|---|---|
 | `DEEPSEEK_API_KEY` | unset | Enables the plain-language explanation (DeepSeek, ~free for the hackathon: 5M-token grant for a new account; the app runs fine without it) |
-| `DRUGFORGE_VINA_CPU` | `2` | Cores per docking run |
-| `DRUGFORGE_DATA_DIR` | `./data` | Writable data directory |
-| `DRUGFORGE_DB_PATH` | `<data>/results.db` | SQLite database |
+| `VALKYRIE_VINA_CPU` | `2` | Cores per docking run |
+| `VALKYRIE_DATA_DIR` | `./data` | Writable data directory |
+| `VALKYRIE_DB_PATH` | `<data>/results.db` | SQLite database |
 
-`DRUGFORGE_VINA_CPU` matters on small hosts: Vina otherwise uses every available
+`VALKYRIE_VINA_CPU` matters on small hosts: Vina otherwise uses every available
 core, so one request can saturate the machine.
 
 ## Tests
@@ -106,7 +106,7 @@ the engine and needs no network access or API keys.
 ## Architecture
 
 ```
-src/drugforge/
+src/valkyrie/
 ├── domain/      models and the target registry, no I/O
 ├── chem/        resolution, preparation, descriptors, ADMET
 ├── docking/     Vina execution, rescoring, consensus
@@ -134,7 +134,7 @@ with the source of every claim visible. A prediction is not a validation.
 
 ## How I used Kiro
 
-DrugForge was built with Kiro's spec-driven workflow. The `.kiro/` directory is the
+Valkyrie was built with Kiro's spec-driven workflow. The `.kiro/` directory is the
 record of that process:
 
 - **Steering** (`.kiro/steering/`): persistent project rules Kiro applied to every

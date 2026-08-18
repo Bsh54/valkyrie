@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from drugforge.ai import boltz, explainer
-from drugforge.domain.targets import get_target
+from valkyrie.ai import boltz, explainer
+from valkyrie.domain.targets import get_target
 
 
 @pytest.fixture
@@ -51,7 +51,7 @@ def test_boltz_is_skipped_without_a_key_even_when_ranked_first():
     assert not boltz.should_run(rank=1, passed_admet=True)
 
 
-@patch("drugforge.ai.boltz.requests.post")
+@patch("valkyrie.ai.boltz.requests.post")
 def test_boltz_success(mock_post, monkeypatch):
     _with_key(monkeypatch, "BOLTZ_API_KEY")
     mock_post.return_value = MagicMock(
@@ -70,7 +70,7 @@ def test_boltz_success(mock_post, monkeypatch):
         (requests.ConnectionError(), "network_error"),
     ],
 )
-@patch("drugforge.ai.boltz.requests.post")
+@patch("valkyrie.ai.boltz.requests.post")
 def test_boltz_network_failures_are_contained(mock_post, monkeypatch, failure, expected):
     _with_key(monkeypatch, "BOLTZ_API_KEY")
     mock_post.side_effect = failure
@@ -83,7 +83,7 @@ def test_boltz_network_failures_are_contained(mock_post, monkeypatch, failure, e
     ("status_code", "expected"),
     [(429, "rate_limited"), (500, "server_error_500"), (404, "http_404")],
 )
-@patch("drugforge.ai.boltz.requests.post")
+@patch("valkyrie.ai.boltz.requests.post")
 def test_boltz_http_failures_are_contained(mock_post, monkeypatch, status_code, expected):
     _with_key(monkeypatch, "BOLTZ_API_KEY")
     mock_post.return_value = MagicMock(status_code=status_code)
@@ -128,7 +128,7 @@ def test_missing_key_does_not_raise(result_payload, target):
     assert result.error_detail == "DEEPSEEK_API_KEY is not set"
 
 
-@patch("drugforge.ai.explainer.requests.post")
+@patch("valkyrie.ai.explainer.requests.post")
 def test_explainer_success(mock_post, monkeypatch, result_payload, target):
     _with_key(monkeypatch)
     mock_post.return_value = MagicMock(
@@ -140,14 +140,14 @@ def test_explainer_success(mock_post, monkeypatch, result_payload, target):
     assert "Predicted" in result.text
 
 
-@patch("drugforge.ai.explainer.requests.post")
+@patch("valkyrie.ai.explainer.requests.post")
 def test_explainer_http_failure_is_contained(mock_post, monkeypatch, result_payload, target):
     _with_key(monkeypatch)
     mock_post.return_value = MagicMock(status_code=500)
     assert explainer.explain(result_payload, target).status == "error"
 
 
-@patch("drugforge.ai.explainer.requests.post")
+@patch("valkyrie.ai.explainer.requests.post")
 def test_explainer_malformed_response_is_contained(
     mock_post, monkeypatch, result_payload, target
 ):
@@ -158,7 +158,7 @@ def test_explainer_malformed_response_is_contained(
     assert result.error_detail == "invalid_response"
 
 
-@patch("drugforge.ai.explainer.requests.post")
+@patch("valkyrie.ai.explainer.requests.post")
 def test_explainer_timeout_is_contained(mock_post, monkeypatch, result_payload, target):
     _with_key(monkeypatch)
     mock_post.side_effect = requests.Timeout()

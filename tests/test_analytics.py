@@ -5,7 +5,7 @@ import json
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-from drugforge.analytics.benchmarks import (
+from valkyrie.analytics.benchmarks import (
     compute_auc,
     compute_enrichment_factor,
     compute_rmsd,
@@ -61,7 +61,7 @@ def test_rmsd_tolerates_missing_input():
 
 
 def test_missing_artifacts_are_reported_as_not_run(tmp_path, monkeypatch):
-    monkeypatch.setattr("drugforge.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
+    monkeypatch.setattr("valkyrie.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
     report = load_report()
     assert report["internal"] is None
     assert report["internal_status"] == "not_run"
@@ -70,7 +70,7 @@ def test_missing_artifacts_are_reported_as_not_run(tmp_path, monkeypatch):
 
 
 def test_skipped_entries_survive_loading(tmp_path, monkeypatch):
-    monkeypatch.setattr("drugforge.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
+    monkeypatch.setattr("valkyrie.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
     (tmp_path / "external.json").write_text(
         json.dumps(
             {
@@ -97,6 +97,6 @@ def test_skipped_entries_survive_loading(tmp_path, monkeypatch):
 
 
 def test_corrupt_artifact_is_treated_as_absent(tmp_path, monkeypatch):
-    monkeypatch.setattr("drugforge.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
+    monkeypatch.setattr("valkyrie.analytics.benchmarks.BENCHMARKS_DIR", tmp_path)
     (tmp_path / "internal.json").write_text("{ not json", encoding="utf-8")
     assert load_report()["internal_status"] == "not_run"

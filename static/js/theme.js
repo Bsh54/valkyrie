@@ -1,5 +1,5 @@
-// Tailwind theme extracted from the DrugForge design system
-// (stitch_drugforge_molecular_docking_lab/clinical_precision_discovery).
+// Tailwind theme extracted from the Valkyrie design system
+// (stitch_valkyrie_molecular_docking_lab/clinical_precision_discovery).
 // Must be loaded after the Tailwind CDN script and before any markup renders.
 tailwind.config = {
     darkMode: "class",

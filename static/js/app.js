@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     Router.register("/", () => HomePage.render(mountEl));
 
     Router.register("/lab", () => {
-        const prefill = sessionStorage.getItem("drugforge:prefill");
-        sessionStorage.removeItem("drugforge:prefill");
+        const prefill = sessionStorage.getItem("valkyrie:prefill");
+        sessionStorage.removeItem("valkyrie:prefill");
         LabPage.render(mountEl, { prefill });
     });
 

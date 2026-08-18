@@ -2,8 +2,8 @@
 
 from rdkit import Chem
 
-from drugforge.docking.consensus import compute_consensus
-from drugforge.docking.engine import (
+from valkyrie.docking.consensus import compute_consensus
+from valkyrie.docking.engine import (
     first_model_only,
     parse_first_model,
     pose_to_mol_block,

@@ -21,11 +21,11 @@ Traces: REQ-UI-7, REQ-UI-8, REQ-UI-13
 ---
 
 ## Task 2: Library API endpoints
-- [ ] Create `drugforge/library.py`:
+- [ ] Create `valkyrie/library.py`:
       - Load `data/ethnobotanical.json` at import.
       - `get_compounds() -> list[dict]` — full ethnobotanical entries.
       - `get_compound(compound_id) -> dict | None`.
-- [ ] Add to `drugforge/api.py`:
+- [ ] Add to `valkyrie/api.py`:
       - `GET /api/compounds` — list all ethnobotanical compounds.
       - `GET /api/compounds/{compound_id}` — single compound detail.
       - `GET /api/library/{target_id}` — pre-computed rankings (future; for now,

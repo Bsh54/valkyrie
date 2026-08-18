@@ -22,20 +22,20 @@ from pathlib import Path
 import requests
 from rdkit import Chem, RDLogger
 
-from drugforge.analytics.benchmarks import RMSD_SUCCESS_THRESHOLD, compute_rmsd
-from drugforge.chem.crystal import centroid, find_primary_ligand
-from drugforge.chem.ligand import prepare_ligand
-from drugforge.chem.molblock import build_mol_from_atoms
-from drugforge.chem.receptor import prepare_receptor
-from drugforge.config import (
+from valkyrie.analytics.benchmarks import RMSD_SUCCESS_THRESHOLD, compute_rmsd
+from valkyrie.chem.crystal import centroid, find_primary_ligand
+from valkyrie.chem.ligand import prepare_ligand
+from valkyrie.chem.molblock import build_mol_from_atoms
+from valkyrie.chem.receptor import prepare_receptor
+from valkyrie.config import (
     BENCHMARK_SETS_DIR,
     BENCHMARKS_DIR,
     HTTP_TIMEOUT_S,
     RCSB_DOWNLOAD_URL,
     RECEPTOR_CACHE_DIR,
 )
-from drugforge.domain.models import DockingBox
-from drugforge.docking.engine import dock
+from valkyrie.domain.models import DockingBox
+from valkyrie.docking.engine import dock
 
 RDLogger.DisableLog("rdApp.*")
 

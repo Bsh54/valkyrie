@@ -1,5 +1,5 @@
 // Ethnobotanical library. Visual style from
-// stitch_drugforge_molecular_docking_lab/drugforge_ethnobotanical_library,
+// stitch_valkyrie_molecular_docking_lab/valkyrie_ethnobotanical_library,
 // wired to real /api/compounds data. No stock photos, no simulated entries.
 const LibraryPage = {
     state: { compounds: [], query: "", diseaseFilter: "", error: null },
@@ -60,7 +60,7 @@ const LibraryPage = {
     wireCards() {
         document.querySelectorAll("[data-dock-smiles]").forEach((el) => {
             el.addEventListener("click", () => {
-                sessionStorage.setItem("drugforge:prefill", el.dataset.dockSmiles);
+                sessionStorage.setItem("valkyrie:prefill", el.dataset.dockSmiles);
                 Router.navigate("/lab");
             });
         });

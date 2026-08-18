@@ -40,7 +40,7 @@ GET /api/result/{id}/report
 ┌─────────────────────────────────────────────────────┐
 │  ⚠ IN-SILICO PREDICTION — NOT FOR CLINICAL USE      │
 ├─────────────────────────────────────────────────────┤
-│  DrugForge — Molecular Docking Report               │
+│  Valkyrie — Molecular Docking Report               │
 │  Generated: 2026-08-08                              │
 ├─────────────────────────────────────────────────────┤
 │                                                      │
@@ -109,12 +109,12 @@ GET /api/result/{id}/report
 ## 3. Module Structure
 
 ```
-drugforge/
+valkyrie/
 ├── report.py       # NEW — PDF report generation
 └── api.py          # MODIFIED — adds GET /api/result/{id}/report
 ```
 
-### `drugforge/report.py`
+### `valkyrie/report.py`
 
 ```python
 def generate_report(result: dict) -> bytes:

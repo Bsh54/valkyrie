@@ -5,9 +5,9 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 
-from drugforge.errors import DockingError, PipelineError, ValidationError
-from drugforge.web import jobs
-from drugforge.web.app import create_app
+from valkyrie.errors import DockingError, PipelineError, ValidationError
+from valkyrie.web import jobs
+from valkyrie.web.app import create_app
 
 
 @pytest.fixture
@@ -57,7 +57,7 @@ def test_benchmarks_state_their_scope(client):
 
 
 def test_screening_enqueues_a_job(client):
-    with patch("drugforge.web.jobs.submit", return_value="jid123") as submit:
+    with patch("valkyrie.web.jobs.submit", return_value="jid123") as submit:
         response = client.post(
             "/api/screenings", json={"molecule": "ethanol", "target_id": "pf-dhfr"}
         )
@@ -78,7 +78,7 @@ def _run_job_now(job_id="test-job", molecule="ethanol"):
 
 
 def test_job_runs_stores_and_result_is_retrievable(client, screening_result):
-    with patch("drugforge.web.jobs.run_screening", return_value=screening_result):
+    with patch("valkyrie.web.jobs.run_screening", return_value=screening_result):
         job_id = _run_job_now()
 
     job = client.get(f"/api/jobs/{job_id}").json()
@@ -92,7 +92,7 @@ def test_job_runs_stores_and_result_is_retrievable(client, screening_result):
 
 
 def test_report_downloads_as_pdf(client, screening_result):
-    with patch("drugforge.web.jobs.run_screening", return_value=screening_result):
+    with patch("valkyrie.web.jobs.run_screening", return_value=screening_result):
         job_id = _run_job_now(job_id="report-job")
     result_id = client.get(f"/api/jobs/{job_id}").json()["result_id"]
 
@@ -117,7 +117,7 @@ def test_missing_result_is_not_found(client):
 )
 def test_job_reports_pipeline_errors(screening_result, cause, stage):
     with patch(
-        "drugforge.web.jobs.run_screening",
+        "valkyrie.web.jobs.run_screening",
         side_effect=PipelineError(stage=stage, cause=cause),
     ):
         _run_job_now(job_id="err-job", molecule="x")
@@ -129,7 +129,7 @@ def test_job_reports_pipeline_errors(screening_result, cause, stage):
 
 
 def test_cancelled_queued_job_is_skipped():
-    with patch("drugforge.web.jobs.run_screening") as run:
+    with patch("valkyrie.web.jobs.run_screening") as run:
         jobs._jobs["cancel-me"] = {"status": "queued", "position": 0, "result_id": None, "error": None}
         assert jobs.cancel("cancel-me") is True
         jobs._run("cancel-me", "CCO", "pf-dhfr", 8)

@@ -57,13 +57,13 @@ Extended pipeline:
 
 | Module | Change |
 |--------|--------|
-| `drugforge/rescoring.py` | NEW — Vinardo rescoring of docked pose |
-| `drugforge/consensus.py` | NEW — consensus formula, normalization, ranking |
-| `drugforge/docking.py` | MODIFIED — DockingResult gains `vinardo_score` field |
-| `drugforge/pipeline.py` | MODIFIED — adds rescore + consensus stages |
-| `drugforge/api.py` | MODIFIED — response includes both scores + consensus |
-| `drugforge/benchmarks.py` | NEW — enrichment measurement (AUC/EF) |
-| `drugforge/api.py` | MODIFIED — adds `GET /benchmarks` endpoint |
+| `valkyrie/rescoring.py` | NEW — Vinardo rescoring of docked pose |
+| `valkyrie/consensus.py` | NEW — consensus formula, normalization, ranking |
+| `valkyrie/docking.py` | MODIFIED — DockingResult gains `vinardo_score` field |
+| `valkyrie/pipeline.py` | MODIFIED — adds rescore + consensus stages |
+| `valkyrie/api.py` | MODIFIED — response includes both scores + consensus |
+| `valkyrie/benchmarks.py` | NEW — enrichment measurement (AUC/EF) |
+| `valkyrie/api.py` | MODIFIED — adds `GET /benchmarks` endpoint |
 
 ---
 

@@ -21,7 +21,7 @@ Traces: REQ-AF-2, REQ-AF-3, REQ-AF-5, REQ-AF-6
 ---
 
 ## Task 2: ADMET module
-- [ ] Create `drugforge/admet.py`:
+- [ ] Create `valkyrie/admet.py`:
       - `compute_admet(mol: Mol) -> ADMETResult`
       - ESOL logS using Delaney equation (MW, logP, rotatable bonds, aromatic proportion)
       - GI absorption from TPSA + logP (Egan model)
@@ -36,7 +36,7 @@ Traces: REQ-AF-1, REQ-AF-5
 ---
 
 ## Task 3: Pipeline integration
-- [ ] Modify `drugforge/pipeline.py`:
+- [ ] Modify `valkyrie/pipeline.py`:
       - Add ADMET computation after drug-likeness stage.
       - Add `admet: ADMETResult` and `is_hit: bool` to `PipelineResult`.
       - Include `failure_reasons` in result.
@@ -60,7 +60,7 @@ Traces: REQ-AF-3, REQ-AF-4
 
 ## Task 5: Store schema update
 - [ ] Add `admet_json` and `is_hit` columns to `docking_results` table.
-- [ ] Update `save_result()` and `get_result()` in `drugforge/store.py`.
+- [ ] Update `save_result()` and `get_result()` in `valkyrie/store.py`.
 
 Traces: persistence
 

@@ -3,13 +3,13 @@
 ## Feature
 A grounded natural-language explanation layer using the DeepSeek API (model
 deepseek-v4-flash). Generates plain-language interpretations of docking results
-using ONLY the data provided by DrugForge.
+using ONLY the data provided by Valkyrie.
 
 ## Requirements (EARS notation)
 
 ### REQ-AE-1: Grounded Explanation
 The system shall generate a plain-language explanation of a docking result using
-ONLY the data provided by DrugForge: the affinity score, the drug-likeness
+ONLY the data provided by Valkyrie: the affinity score, the drug-likeness
 metrics, the comparison to the target's reference drug, the ADMET results, and
 a curated per-disease fact sheet stored in the repo.
 

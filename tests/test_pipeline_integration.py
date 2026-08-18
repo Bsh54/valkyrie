@@ -9,14 +9,14 @@ from unittest.mock import patch
 import pytest
 from rdkit import Chem
 
-from drugforge.errors import PipelineError
-from drugforge.pipeline.comparison import build_comparisons, overall_verdict
-from drugforge.pipeline.runner import run_screening
+from valkyrie.errors import PipelineError
+from valkyrie.pipeline.comparison import build_comparisons, overall_verdict
+from valkyrie.pipeline.runner import run_screening
 
 
 def test_invalid_molecule_fails_at_the_validation_stage():
     with (
-        patch("drugforge.chem.resolver._lookup_pubchem", return_value=None),
+        patch("valkyrie.chem.resolver._lookup_pubchem", return_value=None),
         pytest.raises(PipelineError) as exc_info,
     ):
         run_screening("not_a_molecule_zzz", "pf-dhfr")

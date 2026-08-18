@@ -2,9 +2,9 @@
 
 import sqlite3
 
-from drugforge.domain.models import Explanation
-from drugforge.storage import repository
-from drugforge.storage.database import connect
+from valkyrie.domain.models import Explanation
+from valkyrie.storage import repository
+from valkyrie.storage.database import connect
 
 
 def test_round_trip_preserves_values(screening_result):
@@ -66,7 +66,7 @@ def test_stored_results_carry_a_disclaimer(screening_result):
 def test_legacy_table_and_columns_are_migrated(tmp_path, monkeypatch):
     """A database from an earlier release must keep working after upgrade."""
     db_path = tmp_path / "legacy.db"
-    monkeypatch.setattr("drugforge.storage.database.DB_PATH", db_path)
+    monkeypatch.setattr("valkyrie.storage.database.DB_PATH", db_path)
 
     legacy = sqlite3.connect(str(db_path))
     legacy.execute(

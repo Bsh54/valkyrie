@@ -30,7 +30,7 @@ Pipeline result available
 
 ## 2. Module Design
 
-### `drugforge/explainer.py`
+### `valkyrie/explainer.py`
 
 ```python
 @dataclass
@@ -60,7 +60,7 @@ def generate_explanation(result: dict, target_id: str) -> Explanation:
 
 ### System prompt
 ```
-You are a scientific communication assistant for DrugForge, a virtual screening
+You are a scientific communication assistant for Valkyrie, a virtual screening
 platform. You explain molecular docking results in plain language for researchers.
 
 RULES:

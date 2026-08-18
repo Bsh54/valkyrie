@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DrugForge - Open-Source Molecular Docking</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;700&amp;family=Public+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#005eb8",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#004f54",
+                        "warning-energy": "#F97316",
+                        "on-primary-fixed-variant": "#00468c",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-surface-variant": "#424752",
+                        "on-tertiary-fixed": "#341100",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "success-docking": "#22C55E",
+                        "on-primary-container": "#c8daff",
+                        "on-secondary-fixed": "#002022",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed-dim": "#5dd8e2",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-container": "#006e75",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-fixed": "#001b3d",
+                        "secondary-fixed": "#7df4ff",
+                        "tertiary-container": "#9f4300",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#00478d",
+                        "structural-blue": "#5E94C3",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "secondary-container": "#7af1fc",
+                        "on-error": "#ffffff",
+                        "tertiary": "#793100",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "secondary": "#006970",
+                        "deep-navy": "#325880",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-primary": "#a9c7ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline-variant": "#c2c6d4",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#727783",
+                        "surface-tint": "#005db6",
+                        "molecular-green": "#5D864F",
+                        "on-tertiary-container": "#ffcfb9",
+                        "surface-bright": "#f7f9fb",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "gutter": "24px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "headline-xl": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto h-16 border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<div class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined fill text-structural-blue">science</span>
+                DrugForge
+            </div>
+<nav class="hidden md:flex gap-6">
+<!-- Navigation intent: Exploring the platform -> Benchmark or Lab are close, but we default inactive for landing page -->
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Lab</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Library</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Benchmarks</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Docs</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-body-md text-body-md text-primary font-medium hover:text-deep-navy transition-colors">Sign In</button>
+<button class="bg-primary text-on-primary font-body-md text-body-md px-4 py-2 rounded-lg hover:bg-deep-navy transition-colors font-medium">Start Docking</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center w-full">
+<!-- Hero Section -->
+<section class="w-full max-w-max-width px-margin-desktop py-24 flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none z-0" style="background-image: radial-gradient(#00478d 1px, transparent 1px); background-size: 24px 24px;"></div>
+<div class="z-10 max-w-3xl space-y-6">
+<div class="inline-flex items-center gap-2 bg-primary-fixed/30 text-primary px-3 py-1 rounded-full font-label-caps text-label-caps mb-4 border border-primary-fixed">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    v2.4.0 Released
+                </div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface leading-tight">
+                    Forge Better Medicine for <span class="text-primary">Neglected Diseases.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    The open-source molecular docking pipeline for the Global South. Spec-driven. Transparent. Accessible. Empowering researchers to tackle challenges ignored by traditional pharma.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+<button class="bg-primary text-on-primary font-body-md text-body-md px-6 py-3 rounded-lg hover:bg-deep-navy transition-colors font-medium flex items-center justify-center gap-2 shadow-sm">
+                        Start Docking
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-lowest text-primary border border-primary font-body-md text-body-md px-6 py-3 rounded-lg hover:bg-surface-container-low transition-colors font-medium flex items-center justify-center gap-2">
+                        Explore the Library
+                        <span class="material-symbols-outlined">auto_stories</span>
+</button>
+</div>
+</div>
+<!-- Hero Image / Interface Mockup -->
+<div class="w-full mt-16 z-10">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mx-auto max-w-5xl">
+<img alt="Platform Dashboard Preview" class="w-full h-auto rounded-lg object-cover border border-surface-container-high" data-alt="A highly detailed, clean, medical-grade UI mockup of a molecular docking software dashboard. The interface shows a 3D view of a complex protein structure bound to a small molecule ligand. The color palette is sterile white, deep primary blue, and structural teal. The design is dense with data, featuring monospaced text, technical tables, and precision graphs representing binding affinities. The aesthetic is modern corporate mixed with bio-informatics hacker style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyM4EFNHTixTHQleA8fHCc4UszI6qzXwnmiHcdCoqvp0Z-ROUIbJAQciKspe5KHm-NvxHot-iM-mxOuR3vzmp228uev_t9PQIclZpde1UKEy1zqUGQkU0O9C68IoLVgAh1xwztUVSG2tVGUi8RI3N9Ops-wc2dLTG29AGxauw0x4ow42y6NtrAPIdDIAxcBkKhSi6evmxPo-xdBai9ubhW9AvwGFQg-P6DhFSySnNjkaQNBRCT95RLCA"/>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="w-full max-w-max-width px-margin-desktop py-20 bg-surface-container-low">
+<div class="mb-12 text-center max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">A complete pipeline. Zero configuration.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">From raw SMILES strings to validated docking poses, all running directly in your browser or local cluster.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Feature 1 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="w-12 h-12 bg-primary-fixed/20 rounded-lg flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined fill">bolt</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Real-Time Vina</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Browser-compiled AutoDock Vina engine for rapid screening without relying on expensive cloud compute.</p>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="w-12 h-12 bg-molecular-green/10 rounded-lg flex items-center justify-center text-molecular-green mb-2">
+<span class="material-symbols-outlined fill">local_florist</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Ethnobotanical Library</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Pre-processed 3D structures from the African Ethnobotanical database, optimized for in-silico screening.</p>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="w-12 h-12 bg-structural-blue/10 rounded-lg flex items-center justify-center text-structural-blue mb-2">
+<span class="material-symbols-outlined fill">biotech</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Boltz-2 Validation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Integrated AI models for assessing binding pose viability and predicting off-target toxicity.</p>
+</div>
+</div>
+</section>
+<!-- Spec-Driven Core -->
+<section class="w-full max-w-max-width px-margin-desktop py-24 flex flex-col lg:flex-row items-center gap-12">
+<div class="flex-1 space-y-6">
+<div class="font-label-caps text-label-caps text-primary tracking-widest uppercase">Spec-Driven Reproducibility</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Declare your science.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    DrugForge replaces opaque clicking with deterministic JSON specifications. Define your target, grid box, and search space parameters once. Share the spec, reproduce the results anywhere.
+                </p>
+<div class="flex items-center gap-4 pt-4">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">PfDHFR</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Target Example</span>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-success-docking">-8.4</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">kcal/mol</span>
+</div>
+</div>
+</div>
+<div class="flex-1 w-full bg-[#1e293b] rounded-xl overflow-hidden border border-outline-variant shadow-lg">
+<div class="bg-[#0f172a] px-4 py-2 flex items-center justify-between border-b border-[#334155]">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<div class="w-3 h-3 rounded-full bg-warning-energy"></div>
+<div class="w-3 h-3 rounded-full bg-success-docking"></div>
+</div>
+<span class="font-label-caps text-label-caps text-[#94a3b8]">docking_spec.json</span>
+</div>
+<div class="p-4 overflow-x-auto">
+<pre class="font-code-md text-code-md text-[#e2e8f0]"><code><span class="text-[#f1f5f9]">{</span>
+  <span class="text-[#7df4ff]">"experiment_id"</span>: <span class="text-[#ffb691]">"malaria_dhfr_001"</span>,
+  <span class="text-[#7df4ff]">"target"</span>: <span class="text-[#f1f5f9]">{</span>
+    <span class="text-[#7df4ff]">"pdb_id"</span>: <span class="text-[#ffb691]">"1J3I"</span>,
+    <span class="text-[#7df4ff]">"chains"</span>: [<span class="text-[#ffb691]">"A"</span>],
+    <span class="text-[#7df4ff]">"prepare_receptor"</span>: <span class="text-[#5dd8e2]">true</span>
+  <span class="text-[#f1f5f9]">}</span>,
+  <span class="text-[#7df4ff]">"grid"</span>: <span class="text-[#f1f5f9]">{</span>
+    <span class="text-[#7df4ff]">"center_x"</span>: <span class="text-[#ffcfb9]">28.5</span>,
+    <span class="text-[#7df4ff]">"center_y"</span>: <span class="text-[#ffcfb9]">14.2</span>,
+    <span class="text-[#7df4ff]">"center_z"</span>: <span class="text-[#ffcfb9]">-5.8</span>,
+    <span class="text-[#7df4ff]">"size_x"</span>: <span class="text-[#ffcfb9]">20</span>,
+    <span class="text-[#7df4ff]">"size_y"</span>: <span class="text-[#ffcfb9]">20</span>,
+    <span class="text-[#7df4ff]">"size_z"</span>: <span class="text-[#ffcfb9]">20</span>
+  <span class="text-[#f1f5f9]">}</span>,
+  <span class="text-[#7df4ff]">"ligand_library"</span>: <span class="text-[#ffb691]">"ethno_africa_curated"</span>
+<span class="text-[#f1f5f9]">}</span></code>
+</pre>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component from JSON -->
+<footer class="bg-surface-container-highest w-full py-8 px-margin-desktop mt-auto border-t border-outline-variant">
+<div class="max-w-max-width mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+<span class="material-symbols-outlined fill">science</span>
+                 DrugForge
+            </div>
+<nav class="flex flex-wrap gap-6 justify-center">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:underline" href="#">API Reference</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:underline" href="#">Citations</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:underline" href="#">GitHub</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:underline" href="#">Privacy</a>
+</nav>
+<div class="font-body-sm text-body-sm text-on-surface">
+                © 2024 DrugForge Lab. CC-BY 4.0 License.
+            </div>
+</div>
+</footer>
+</body></html>

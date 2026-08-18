@@ -12,7 +12,7 @@ data/ethnobotanical.json ──┐
 SQLite docking_results ────┘                                      │
                                                      ┌────────────┴────────────┐
                                                      ▼                         ▼
-                                          data/dataset/drugforge.json   drugforge.csv
+                                          data/dataset/valkyrie.json   valkyrie.csv
                                                      │
                                           GET /api/dataset            (query, JSON)
                                           GET /api/dataset/download   (csv | json)
@@ -25,7 +25,7 @@ docking results (the computation). Neither side is mutated.
 
 ## 2. Schema
 
-One row per (compound, target) pair. Declared once in `drugforge/dataset.py`
+One row per (compound, target) pair. Declared once in `valkyrie/dataset.py`
 and used for both export and validation.
 
 | Field | Type | Required | Notes |
@@ -75,7 +75,7 @@ and used for both export and validation.
 
 ## 3. Module Design
 
-### `drugforge/dataset.py`
+### `valkyrie/dataset.py`
 
 ```python
 SCHEMA: dict[str, FieldSpec]           # single source of truth
@@ -105,7 +105,7 @@ report every problem at once instead of failing on the first.
 ```json
 {
   "metadata": {
-    "name": "DrugForge Ethnobotanical Docking Dataset",
+    "name": "Valkyrie Ethnobotanical Docking Dataset",
     "version": "1.0",
     "generated_at": "2026-08-11T21:00:00Z",
     "license": "CC-BY-4.0",
@@ -121,7 +121,7 @@ report every problem at once instead of failing on the first.
 
 ### CSV header
 ```
-# DrugForge Ethnobotanical Docking Dataset v1.0
+# Valkyrie Ethnobotanical Docking Dataset v1.0
 # License: CC-BY-4.0
 # DISCLAIMER: In-silico predictions only. Not clinical evidence. Lab validation required.
 # Generated: 2026-08-11T21:00:00Z
@@ -155,7 +155,7 @@ travel with every query result.
 ### Download headers
 ```
 Content-Type: text/csv; charset=utf-8
-Content-Disposition: attachment; filename="drugforge_dataset_v1.csv"
+Content-Disposition: attachment; filename="valkyrie_dataset_v1.csv"
 ```
 
 ---
@@ -168,7 +168,7 @@ python scripts/build_dataset.py [--output-dir data/dataset]
 ```
 1. `build_dataset()`
 2. `validate_schema()` — on violations, print each and exit non-zero
-3. Write `drugforge.json` and `drugforge.csv`
+3. Write `valkyrie.json` and `valkyrie.csv`
 4. Print counts: total / computed / pending
 
 Exit code is non-zero on validation failure so CI can gate on it.
@@ -178,15 +178,15 @@ Exit code is non-zero on validation failure so CI can gate on it.
 ## 6. File Layout
 
 ```
-drugforge/
+valkyrie/
 ├── dataset.py            # NEW: schema, build, validate, export, query
 └── api.py                # MODIFIED: 3 dataset endpoints
 scripts/
 └── build_dataset.py      # NEW
 data/
 └── dataset/
-    ├── drugforge.json    # generated
-    ├── drugforge.csv     # generated
+    ├── valkyrie.json    # generated
+    ├── valkyrie.csv     # generated
     └── LICENSE           # CC-BY-4.0 text for the data
 docs/
 └── DATASET.md            # NEW: schema + API documentation

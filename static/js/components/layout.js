@@ -26,7 +26,7 @@ const Layout = {
                 <div class="flex items-center gap-10">
                     <a data-link href="/" class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2">
                         <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>
-                        DrugForge
+                        Valkyrie
                     </a>
                     <nav class="hidden md:flex gap-8 items-center h-16">${desktopLinks}</nav>
                 </div>
@@ -68,7 +68,7 @@ const Layout = {
                     <div class="col-span-2 md:col-span-1">
                         <div class="font-headline-md text-headline-md text-primary flex items-center gap-2 mb-3">
                             <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>
-                            DrugForge
+                            Valkyrie
                         </div>
                         <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">
                             Open molecular docking for neglected tropical diseases. Bridging African plant
@@ -80,7 +80,7 @@ const Layout = {
                     ${col("Diseases", [link("/lab", "Malaria"), link("/lab", "Chagas disease"), link("/lab", "Leishmaniasis")])}
                 </div>
                 <div class="border-t border-outline-variant mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
-                    <div class="font-body-sm text-body-sm text-on-surface-variant">DrugForge Lab. Code Apache-2.0, data CC-BY-4.0.</div>
+                    <div class="font-body-sm text-body-sm text-on-surface-variant">Valkyrie Lab. Code Apache-2.0, data CC-BY-4.0.</div>
                     <div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2">
                         <span class="material-symbols-outlined text-[16px] text-primary">info</span>
                         In-silico predictions only, not clinical advice.
@@ -118,7 +118,7 @@ const AppShell = {
         return `
         <aside class="hidden md:flex flex-col w-56 shrink-0 border-r border-outline-variant bg-surface-container-lowest sticky top-0 h-screen">
             <a data-link href="/" class="flex items-center gap-2 h-16 px-4 border-b border-outline-variant font-headline-md text-headline-md font-bold text-primary shrink-0">
-                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>DrugForge
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">science</span>Valkyrie
             </a>
             <nav class="flex flex-col gap-1 p-3">${items}</nav>
             <div class="mt-auto p-3 border-t border-outline-variant flex flex-col gap-1">

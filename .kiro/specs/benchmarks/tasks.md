@@ -18,7 +18,7 @@ Traces: REQ-BM-1, REQ-BM-4
 ---
 
 ## Task 2: Metrics module
-- [ ] Create `drugforge/benchmarks.py` with `compute_auc`, `compute_ef`,
+- [ ] Create `valkyrie/benchmarks.py` with `compute_auc`, `compute_ef`,
       `compute_rmsd`, `load_benchmarks`.
 - [ ] AUC via rank-based Mann-Whitney form (no sklearn/scipy dependency).
 - [ ] `compute_rmsd` uses `rdMolAlign.GetBestRMS` for symmetry correction.
@@ -82,7 +82,7 @@ Traces: REQ-BM-5, REQ-BM-6, REQ-BM-7
 ---
 
 ## Task 7: API endpoint
-- [ ] Add `GET /api/benchmarks` to `drugforge/api.py` returning
+- [ ] Add `GET /api/benchmarks` to `valkyrie/api.py` returning
       `{internal, external, scope_statement, disclaimer}`.
 - [ ] Missing artifact -> `null` plus not-run marker, not a 404.
 - [ ] Test: response contains `scope_statement` and `disclaimer`; skipped

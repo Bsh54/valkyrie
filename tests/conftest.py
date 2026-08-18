@@ -7,7 +7,7 @@ network call or an API key present in the developer's environment.
 import pytest
 from rdkit import Chem, RDLogger
 
-from drugforge.domain.models import (
+from valkyrie.domain.models import (
     ADMETResult,
     Comparison,
     DrugLikeness,
@@ -28,12 +28,12 @@ def no_external_services(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def isolated_database(tmp_path, monkeypatch):
-    monkeypatch.setattr("drugforge.storage.database.DB_PATH", tmp_path / "results.db")
+    monkeypatch.setattr("valkyrie.storage.database.DB_PATH", tmp_path / "results.db")
 
 
 @pytest.fixture
 def clear_reference_cache():
-    from drugforge.pipeline.comparison import clear_reference_cache
+    from valkyrie.pipeline.comparison import clear_reference_cache
 
     clear_reference_cache()
     yield

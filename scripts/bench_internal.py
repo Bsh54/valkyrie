@@ -16,21 +16,21 @@ from pathlib import Path
 
 from rdkit import Chem, RDLogger
 
-from drugforge.analytics.benchmarks import (
+from valkyrie.analytics.benchmarks import (
     RMSD_SUCCESS_THRESHOLD,
     compute_auc,
     compute_enrichment_factor,
     compute_rmsd,
 )
-from drugforge.chem.crystal import find_primary_ligand
-from drugforge.chem.ligand import prepare_ligand
-from drugforge.chem.molblock import build_mol_from_atoms
-from drugforge.chem.receptor import get_receptor_pdbqt
-from drugforge.config import BENCHMARK_SETS_DIR, BENCHMARKS_DIR
-from drugforge.docking.consensus import compute_consensus
-from drugforge.docking.engine import dock
-from drugforge.docking.rescoring import rescore_vinardo
-from drugforge.domain.targets import get_target
+from valkyrie.chem.crystal import find_primary_ligand
+from valkyrie.chem.ligand import prepare_ligand
+from valkyrie.chem.molblock import build_mol_from_atoms
+from valkyrie.chem.receptor import get_receptor_pdbqt
+from valkyrie.config import BENCHMARK_SETS_DIR, BENCHMARKS_DIR
+from valkyrie.docking.consensus import compute_consensus
+from valkyrie.docking.engine import dock
+from valkyrie.docking.rescoring import rescore_vinardo
+from valkyrie.domain.targets import get_target
 
 RDLogger.DisableLog("rdApp.*")
 

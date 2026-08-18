@@ -8,5 +8,5 @@ reference drug. Compute constraint: 8GB VPS, no GPU — Vina/RDKit/consensus/ADM
 on CPU one molecule at a time; Boltz-2 is cloud API only. The molecule library is
 ETHNOBOTANICAL: African medicinal-plant compounds each carry plant name (scientific
 + local), traditionally-treated disease, region/people, preparation method, active
-compound, and cited source. DrugForge bridges traditional knowledge to in-silico
+compound, and cited source. Valkyrie bridges traditional knowledge to in-silico
 molecular validation.

@@ -5,14 +5,14 @@ from unittest.mock import MagicMock, patch
 import pytest
 from tests.conftest import PYRIMETHAMINE_SMILES
 
-from drugforge.chem.ligand import prepare_ligand
-from drugforge.chem.receptor import (
+from valkyrie.chem.ligand import prepare_ligand
+from valkyrie.chem.receptor import (
     get_receptor_pdbqt,
     prepare_receptor,
     strip_solvent_and_ligands,
 )
-from drugforge.domain.targets import get_target
-from drugforge.errors import LigandPrepError, ReceptorError
+from valkyrie.domain.targets import get_target
+from valkyrie.errors import LigandPrepError, ReceptorError
 
 SAMPLE_PDB = """HEADER    TEST
 ATOM      1  N   ALA A   1      10.000  15.000  25.000  1.00  0.00           N
@@ -56,7 +56,7 @@ def test_structure_without_protein_is_rejected():
         strip_solvent_and_ligands("HEADER ONLY\nEND\n")
 
 
-@patch("drugforge.chem.receptor.subprocess.run")
+@patch("valkyrie.chem.receptor.subprocess.run")
 def test_receptor_preparation_invokes_open_babel(mock_run, tmp_path):
     mock_run.return_value = MagicMock(returncode=0, stderr="")
     pdb_path = tmp_path / "test.pdb"
@@ -70,7 +70,7 @@ def test_receptor_preparation_invokes_open_babel(mock_run, tmp_path):
     assert (tmp_path / "test_clean.pdb").exists()
 
 
-@patch("drugforge.chem.receptor.subprocess.run")
+@patch("valkyrie.chem.receptor.subprocess.run")
 def test_open_babel_failure_is_reported(mock_run, tmp_path):
     mock_run.return_value = MagicMock(returncode=1, stderr="boom")
     pdb_path = tmp_path / "test.pdb"
@@ -80,9 +80,9 @@ def test_open_babel_failure_is_reported(mock_run, tmp_path):
         prepare_receptor(pdb_path, tmp_path / "missing.pdbqt")
 
 
-@patch("drugforge.chem.receptor.download_structure")
+@patch("valkyrie.chem.receptor.download_structure")
 def test_cached_receptor_skips_download(mock_download, tmp_path, monkeypatch):
-    monkeypatch.setattr("drugforge.chem.receptor.RECEPTOR_CACHE_DIR", tmp_path)
+    monkeypatch.setattr("valkyrie.chem.receptor.RECEPTOR_CACHE_DIR", tmp_path)
     target = get_target("pf-dhfr")
 
     cache_dir = tmp_path / target.pdb_id

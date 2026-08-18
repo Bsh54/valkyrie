@@ -1,4 +1,4 @@
-DrugForge is an online molecular-docking laboratory for neglected tropical
+Valkyrie is an online molecular-docking laboratory for neglected tropical
 diseases (malaria, Chagas, leishmaniasis, sleeping sickness). A user submits a
 molecule (common name or SMILES); it is docked in real time against a validated
 disease protein target using AutoDock Vina; the predicted 3D binding pose and

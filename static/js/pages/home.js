@@ -43,7 +43,7 @@ const HomePage = {
                     Find medicines for the diseases <span class="text-primary italic">the world forgot.</span>
                 </h1>
                 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-                    Africa has healed with its plants for generations. DrugForge gives that knowledge the
+                    Africa has healed with its plants for generations. Valkyrie gives that knowledge the
                     molecular proof modern science asks for, screening real compounds against malaria,
                     Chagas, leishmaniasis and sleeping sickness. Every score is in-silico, validated in the lab.
                 </p>
@@ -69,7 +69,7 @@ const HomePage = {
                     <span class="w-3 h-3 rounded-full bg-warning-energy/60"></span>
                     <span class="w-3 h-3 rounded-full bg-success-docking/60"></span>
                 </div>
-                <div class="flex-1 mx-4 bg-surface rounded px-3 py-1 font-code-md text-[11px] text-outline text-left truncate">drugforge / lab / PfDHFR (1J3I)</div>
+                <div class="flex-1 mx-4 bg-surface rounded px-3 py-1 font-code-md text-[11px] text-outline text-left truncate">valkyrie / lab / PfDHFR (1J3I)</div>
             </div>
             <div class="grid grid-cols-12 gap-2 p-3 bg-surface rounded-b-xl text-left">
                 <div class="hidden md:flex col-span-2 flex-col gap-2">
@@ -186,7 +186,7 @@ const HomePage = {
                     <h2 class="font-display text-[32px] md:text-[46px] leading-tight">Traditional knowledge, molecular proof.</h2>
                     <p class="font-body-lg text-body-lg text-primary-fixed-dim/90 max-w-xl">
                         For generations, West African medicine has treated malaria with plants like
-                        Cryptolepis sanguinolenta. DrugForge screens those compounds against validated
+                        Cryptolepis sanguinolenta. Valkyrie screens those compounds against validated
                         disease targets, giving traditional knowledge a modern, cited, in-silico check.
                     </p>
                     <a data-link href="/library" class="inline-flex items-center gap-2 bg-surface-container-lowest text-primary font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-surface-container-low transition-colors font-medium mt-2">
@@ -216,7 +216,7 @@ const HomePage = {
                 <span class="material-symbols-outlined text-primary text-[36px]" style="font-variation-settings:'FILL' 1;">balance</span>
                 <h2 class="font-display text-[28px] md:text-[38px] leading-tight text-on-surface mt-4 max-w-2xl mx-auto">Honest by design.</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-2xl mx-auto">
-                    DrugForge prioritises candidate molecules. It does not discover or prove drugs, and it
+                    Valkyrie prioritises candidate molecules. It does not discover or prove drugs, and it
                     never gives clinical advice. Docking is the first step of many, and every result waits
                     for the laboratory.
                 </p>

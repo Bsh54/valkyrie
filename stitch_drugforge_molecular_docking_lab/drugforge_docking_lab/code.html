@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DrugForge - Molecular Docking Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#005eb8",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#004f54",
+                        "warning-energy": "#F97316",
+                        "on-primary-fixed-variant": "#00468c",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-surface-variant": "#424752",
+                        "on-tertiary-fixed": "#341100",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "success-docking": "#22C55E",
+                        "on-primary-container": "#c8daff",
+                        "on-secondary-fixed": "#002022",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed-dim": "#5dd8e2",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-container": "#006e75",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-fixed": "#001b3d",
+                        "secondary-fixed": "#7df4ff",
+                        "tertiary-container": "#9f4300",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#00478d",
+                        "structural-blue": "#5E94C3",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "secondary-container": "#7af1fc",
+                        "on-error": "#ffffff",
+                        "tertiary": "#793100",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "secondary": "#006970",
+                        "deep-navy": "#325880",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-primary": "#a9c7ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline-variant": "#c2c6d4",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#727783",
+                        "surface-tint": "#005db6",
+                        "molecular-green": "#5D864F",
+                        "on-tertiary-container": "#ffcfb9",
+                        "surface-bright": "#f7f9fb",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "margin-mobile": "16px",
+                        "base": "4px",
+                        "gutter": "24px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Public Sans"],
+                        "headline-md": ["Public Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "headline-xl": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface h-full flex flex-col font-body-md">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50 flex justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">DrugForge</span>
+<div class="hidden md:flex gap-6">
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 font-body-md text-body-md opacity-80 transition-opacity" href="#">Lab</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md" href="#">Library</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md" href="#">Benchmarks</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors font-body-md text-body-md" href="#">Docs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-surface-container rounded border-outline-variant text-sm w-48 focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded hover:bg-primary-container transition-colors text-sm font-medium">Sign In</button>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden max-w-max-width mx-auto w-full">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-screen sticky top-16 p-4 gap-2 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant dark:border-outline docked left-0 w-64">
+<div class="mb-6 px-2">
+<h2 class="font-headline-md text-headline-md text-primary">Docking Config</h2>
+<p class="text-on-surface-variant text-sm mt-1">PfDHFR Active Site</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1 font-label-caps text-label-caps">
+<a class="flex items-center gap-3 p-3 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-lg transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">biotech</span>
+<span>Targets</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings_input_component</span>
+<span>Parameters</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">lock_open</span>
+<span>Constraints</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span>Solvents</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">save</span>
+<span>Output</span>
+</a>
+</nav>
+<button class="mt-auto bg-primary text-on-primary py-2.5 rounded hover:bg-primary-container transition-colors w-full font-label-caps text-label-caps flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+                Run Docking
+            </button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-background">
+<!-- Left Panel: Target Selection -->
+<div class="w-full lg:w-72 bg-surface-container-lowest border-r border-outline-variant overflow-y-auto p-4 flex flex-col gap-4">
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface border-b border-outline-variant pb-2">Target Selection</h3>
+<!-- Target Card 1 (Active) -->
+<div class="bg-surface border border-primary rounded p-3 relative shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
+<div class="absolute top-3 right-3 w-2 h-2 rounded-full bg-success-docking"></div>
+<h4 class="font-label-caps text-label-caps text-primary mb-1">Malaria PfDHFR</h4>
+<p class="font-code-md text-code-md text-on-surface-variant">PDB ID: 1J3I</p>
+<div class="mt-2 text-xs text-on-surface-variant">
+                        Ref: <span class="font-medium text-on-surface">Pyriméthamine</span>
+</div>
+</div>
+<!-- Target Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-3 hover:bg-surface cursor-pointer transition-colors">
+<h4 class="font-label-caps text-label-caps text-on-surface mb-1">Chagas CYP51</h4>
+<p class="font-code-md text-code-md text-on-surface-variant">PDB ID: 3K1O</p>
+<div class="mt-2 text-xs text-on-surface-variant">
+                        Ref: <span class="font-medium text-on-surface">Posaconazole</span>
+</div>
+</div>
+<!-- Target Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-3 hover:bg-surface cursor-pointer transition-colors">
+<h4 class="font-label-caps text-label-caps text-on-surface mb-1">Leishmaniasis PTR1</h4>
+<p class="font-code-md text-code-md text-on-surface-variant">PDB ID: 2X09</p>
+<div class="mt-2 text-xs text-on-surface-variant">
+                        Ref: <span class="font-medium text-on-surface">Methotrexate</span>
+</div>
+</div>
+</div>
+<!-- Center Viewport (3D Viewer) -->
+<div class="flex-1 flex flex-col relative bg-surface-container-lowest">
+<!-- Inner Header -->
+<div class="h-12 border-b border-outline-variant flex items-center justify-between px-4 bg-surface/80 backdrop-blur-sm z-10">
+<span class="font-body-md text-body-md font-medium">Lab - Target: PfDHFR (PDB 1J3I)</span>
+<div class="flex gap-2">
+<button class="p-1.5 rounded hover:bg-surface-variant text-outline transition-colors"><span class="material-symbols-outlined text-sm">360</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-outline transition-colors"><span class="material-symbols-outlined text-sm">zoom_in</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-outline transition-colors"><span class="material-symbols-outlined text-sm">download</span></button>
+</div>
+</div>
+<!-- 3D Viewport Placeholder -->
+<div class="flex-1 bg-surface-container-low shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] relative flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 mix-blend-multiply" data-alt="A highly detailed 3D molecular visualization showing a complex protein structure with an active site pocket. The protein is rendered in a soft, modern blue and gray ribbon diagram style. A small molecule ligand is docked within the pocket, highlighted in vibrant green and atomic orange to denote binding interactions. The background is a stark, sterile light gray to maintain a clinical, tech-health aesthetic. Soft ambient lighting creates subtle depth." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB74uj2ExDwn4_G_rl1NsyYZgxxZxjOBzXDTLLPk7h92m1K0gjadCA06iSvC3V-YevqX9F8P7tVnYqz5BAjoed9L2BE0158VysrC-zkhc6FSX-Apgt4SskoKGAo0UZ-RuUZVc4kJy2mbeiD5iTNFzsJkuOS4CN2QX97hJ2r_bw3iXdAhkw2x0yQybunVKFnOqK-9oVK7OYl8tsgbOK6KMBcVKFMqvdhXVy49vKix1g2QSQM1rFlcb4itg')"></div>
+<!-- Mock axes -->
+<div class="absolute bottom-4 left-4 flex gap-1 opacity-50">
+<div class="w-4 h-0.5 bg-error rotate-45"></div>
+<div class="w-4 h-0.5 bg-success-docking -rotate-45"></div>
+<div class="w-4 h-0.5 bg-primary rotate-90"></div>
+</div>
+</div>
+<!-- Bottom Comparison Widget -->
+<div class="h-48 border-t border-outline-variant bg-surface p-4 overflow-y-auto">
+<h4 class="font-label-caps text-label-caps text-on-surface mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                        Comparison: Candidate vs Pyriméthamine
+                    </h4>
+<div class="grid grid-cols-3 gap-4 text-sm">
+<!-- Header row -->
+<div class="text-on-surface-variant font-medium pb-2 border-b border-outline-variant">Metric</div>
+<div class="text-on-surface-variant font-medium pb-2 border-b border-outline-variant">Candidate 01</div>
+<div class="text-on-surface-variant font-medium pb-2 border-b border-outline-variant">Pyriméthamine (Ref)</div>
+<!-- Data rows -->
+<div class="py-1">Binding Affinity</div>
+<div class="py-1 text-success-docking font-code-md">-7.4 kcal/mol</div>
+<div class="py-1 text-on-surface font-code-md">-6.8 kcal/mol</div>
+<div class="py-1">RMSD</div>
+<div class="py-1 font-code-md text-on-surface">1.2 Å</div>
+<div class="py-1 font-code-md text-on-surface">0.0 Å</div>
+<div class="py-1">LE (Ligand Efficiency)</div>
+<div class="py-1 font-code-md text-success-docking">0.35</div>
+<div class="py-1 font-code-md text-on-surface">0.31</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: Results & Lipinski -->
+<div class="w-full lg:w-80 bg-surface-container-lowest border-l border-outline-variant overflow-y-auto p-4 flex flex-col gap-6">
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-on-surface border-b border-outline-variant pb-2 mb-4">Docking Results</h3>
+<div class="bg-surface border border-outline-variant rounded p-4 mb-4">
+<div class="text-on-surface-variant text-xs mb-1 uppercase tracking-wider">Top Pose Score</div>
+<div class="font-headline-xl text-headline-xl text-primary flex items-baseline gap-1">
+                            -7.4 <span class="font-body-sm text-sm text-on-surface-variant font-normal">kcal/mol</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="bg-surface-container-low p-2 rounded text-center border border-outline-variant/50">
+<div class="text-xs text-on-surface-variant mb-1">RMSD</div>
+<div class="font-code-md text-code-md">1.2 Å</div>
+</div>
+<div class="bg-surface-container-low p-2 rounded text-center border border-outline-variant/50">
+<div class="text-xs text-on-surface-variant mb-1">Poses</div>
+<div class="font-code-md text-code-md">24</div>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-3 flex items-center justify-between">
+                        Lipinski's Rule of 5
+                        <span class="bg-molecular-green/10 text-molecular-green px-2 py-0.5 rounded font-label-caps text-[10px]">PASS</span>
+</h4>
+<ul class="flex flex-col gap-2 font-body-sm text-body-sm">
+<li class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded">
+<span class="text-on-surface-variant">Molecular Wt</span>
+<div class="flex items-center gap-2">
+<span class="font-code-md">412.5</span>
+<span class="material-symbols-outlined text-success-docking text-sm">check_circle</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded">
+<span class="text-on-surface-variant">LogP</span>
+<div class="flex items-center gap-2">
+<span class="font-code-md">3.2</span>
+<span class="material-symbols-outlined text-success-docking text-sm">check_circle</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded">
+<span class="text-on-surface-variant">H-Donors</span>
+<div class="flex items-center gap-2">
+<span class="font-code-md">3</span>
+<span class="material-symbols-outlined text-success-docking text-sm">check_circle</span>
+</div>
+</li>
+<li class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded">
+<span class="text-on-surface-variant">H-Acceptors</span>
+<div class="flex items-center gap-2">
+<span class="font-code-md">6</span>
+<span class="material-symbols-outlined text-success-docking text-sm">check_circle</span>
+</div>
+</li>
+</ul>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<div class="bg-[#F1F5F9] p-3 rounded font-code-md text-xs text-on-surface-variant break-all">
+                        // SMILES<br/>
+                        CC1=C(C=C(C=C1)NC2=NC=NC3=C2C=CN3)Cl
+                    </div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-desktop mt-auto bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline flex justify-between items-center text-on-surface dark:text-surface-bright font-body-sm text-body-sm z-50 relative">
+<div>© 2024 DrugForge Lab. CC-BY 4.0 License.</div>
+<div class="flex gap-4">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">API Reference</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Citations</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">GitHub</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Privacy</a>
+</div>
+</footer>
+</body></html>

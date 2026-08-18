@@ -7,8 +7,8 @@ Each task is traceable to one or more requirements (REQ-N) from requirements.md.
 ---
 
 ## Task 1: Project scaffold and configuration
-- [ ] Create `drugforge/__init__.py`.
-- [ ] Create `drugforge/config.py`: `DATA_DIR`, `RECEPTOR_CACHE_DIR`, `DB_PATH`,
+- [ ] Create `valkyrie/__init__.py`.
+- [ ] Create `valkyrie/config.py`: `DATA_DIR`, `RECEPTOR_CACHE_DIR`, `DB_PATH`,
       `DEFAULT_EXHAUSTIVENESS=8`, `DOCKING_TIMEOUT_S=300`.
 - [ ] Create `requirements.txt`: fastapi, uvicorn[standard], rdkit-pypi, meeko,
       vina, requests, pytest, hypothesis.
@@ -22,7 +22,7 @@ Traces: project structure (design §3)
 ---
 
 ## Task 2: Error hierarchy
-- [ ] Create `drugforge/errors.py` with `DrugForgeError`, `ValidationError`,
+- [ ] Create `valkyrie/errors.py` with `ValkyrieError`, `ValidationError`,
       `ResolutionError`, `LigandPrepError`, `ReceptorError`, `DockingError`,
       `TargetNotFoundError`, `PipelineError`.
 
@@ -31,7 +31,7 @@ Traces: design §4
 ---
 
 ## Task 3: Target registry
-- [ ] Create `drugforge/targets.py` with `DockingBox`, `ReferenceDrug`, `Target`
+- [ ] Create `valkyrie/targets.py` with `DockingBox`, `ReferenceDrug`, `Target`
       frozen dataclasses.
 - [ ] Define `TARGETS` dict with the malaria/PfDHFR entry (PDB 1J3I,
       pyrimethamine reference, 20×20×20 Å box).
@@ -47,7 +47,7 @@ Traces: REQ-7
 - [ ] Create `data/compounds.json` with ≥10 curated ethnobotanical entries
       (artemisinin, quinine, curcumin, berberine, emetine, chloroquine,
       dihydroartemisinin, luteolin, catechin, piperine) mapping name → SMILES.
-- [ ] Create `drugforge/resolver.py`:
+- [ ] Create `valkyrie/resolver.py`:
       - Load `compounds.json` at module import.
       - `resolve(input: str) -> str`: local lookup (case-insensitive) →
         RDKit SMILES parse → PubChem REST fallback → raise `ResolutionError`.
@@ -59,7 +59,7 @@ Traces: REQ-1
 ---
 
 ## Task 5: Input validator
-- [ ] Create `drugforge/validator.py`:
+- [ ] Create `valkyrie/validator.py`:
       `validate_molecule(input: str) -> str` — calls `resolve`, catches all
       exceptions, raises `ValidationError(detail=...)` on failure.
 - [ ] Write `tests/test_validator.py`: valid name, valid SMILES, invalid SMILES,
@@ -70,7 +70,7 @@ Traces: REQ-9
 ---
 
 ## Task 6: Ligand preparation
-- [ ] Create `drugforge/ligand_prep.py`:
+- [ ] Create `valkyrie/ligand_prep.py`:
       `prepare_ligand(smiles: str) -> tuple[Mol, str]`
       - Parse SMILES → add Hs → embed 3D (ETKDGv3, retry once with new seed on
         failure) → MMFF optimize → Meeko prepare → PDBQT string.
@@ -83,7 +83,7 @@ Traces: REQ-2
 ---
 
 ## Task 7: Receptor manager
-- [ ] Create `drugforge/receptor.py`:
+- [ ] Create `valkyrie/receptor.py`:
       `get_receptor_pdbqt(target: Target) -> Path`
       - Check cache (`data/receptors/{pdb_id}/{pdb_id}.pdbqt`).
       - If missing: download PDB from RCSB, strip water/non-protein heteroatoms,
@@ -97,7 +97,7 @@ Traces: REQ-8
 ---
 
 ## Task 8: Docking engine (Vina wrapper)
-- [ ] Create `drugforge/docking.py`:
+- [ ] Create `valkyrie/docking.py`:
       ```python
       @dataclass
       class DockingResult:
@@ -119,7 +119,7 @@ Traces: REQ-3, REQ-4
 ---
 
 ## Task 9: Drug-likeness calculator
-- [ ] Create `drugforge/druglikeness.py`:
+- [ ] Create `valkyrie/druglikeness.py`:
       ```python
       @dataclass
       class DrugLikeness:
@@ -143,7 +143,7 @@ Traces: REQ-5
 ---
 
 ## Task 10: Reference comparator
-- [ ] Create `drugforge/comparator.py`:
+- [ ] Create `valkyrie/comparator.py`:
       ```python
       @dataclass
       class Comparison:
@@ -168,7 +168,7 @@ Traces: REQ-6
 ---
 
 ## Task 11: Pipeline orchestrator
-- [ ] Create `drugforge/pipeline.py`:
+- [ ] Create `valkyrie/pipeline.py`:
       `run_docking_pipeline(molecule_input, target_id, exhaustiveness) -> PipelineResult`
       - Calls: validate → prepare_ligand → get_receptor → dock → druglikeness →
         compare → returns `PipelineResult` (all fields needed by API response).
@@ -181,7 +181,7 @@ Traces: design §2 (orchestration)
 ---
 
 ## Task 12: Results store (SQLite)
-- [ ] Create `drugforge/store.py`:
+- [ ] Create `valkyrie/store.py`:
       - Auto-create `data/results.db` and table on first call.
       - `save_result(pipeline_result) -> str` (returns UUID).
       - `get_result(result_id: str) -> dict | None`.
@@ -192,13 +192,13 @@ Traces: design §3 (persistence for open dataset goal)
 ---
 
 ## Task 13: FastAPI application
-- [ ] Create `drugforge/api.py`:
+- [ ] Create `valkyrie/api.py`:
       - `GET /api/targets` → list targets.
       - `GET /api/targets/{target_id}` → target detail.
       - `POST /api/dock` → body `{molecule, target_id, exhaustiveness?}` →
         run pipeline → save → return full result.
       - `GET /api/result/{result_id}` → retrieve stored result.
-      - Exception handlers mapping DrugForge errors to HTTP status codes
+      - Exception handlers mapping Valkyrie errors to HTTP status codes
         (422, 404, 500) with structured JSON bodies.
       - Mount `static/` for frontend.
 - [ ] Write `tests/test_api.py`: use FastAPI TestClient for happy path and

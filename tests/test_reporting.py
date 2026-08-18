@@ -1,7 +1,7 @@
 """PDF report generation."""
 
-from drugforge.domain.models import Explanation
-from drugforge.reporting.pdf import _encodable, build_report, render_molecule_png
+from valkyrie.domain.models import Explanation
+from valkyrie.reporting.pdf import _encodable, build_report, render_molecule_png
 
 
 def test_report_is_a_pdf(screening_result):

@@ -6,8 +6,8 @@
 
 ## 1. Target-Registry Data Model
 
-Domain models live in `src/drugforge/domain/models.py`; the registry in
-`src/drugforge/domain/targets.py`.
+Domain models live in `src/valkyrie/domain/models.py`; the registry in
+`src/valkyrie/domain/targets.py`.
 
 ```python
 @dataclass(frozen=True)
@@ -66,63 +66,63 @@ enzyme, is clinically used against Chagas disease, and docks in about a minute.
 
 Linear stages, each typed in and typed out; any failure short-circuits with a
 structured error naming the stage. Orchestrated by
-`src/drugforge/pipeline/runner.py::run_screening`.
+`src/valkyrie/pipeline/runner.py::run_screening`.
 
 ```
 molecule_input, target_id
         |
         v
-1. VALIDATE            drugforge.chem.validator
+1. VALIDATE            valkyrie.chem.validator
    name/SMILES -> canonical SMILES (local table -> ethnobotanical registry
    -> direct SMILES parse -> PubChem)
         |
         v
-2. TARGET LOOKUP       drugforge.domain.targets.get_target
+2. TARGET LOOKUP       valkyrie.domain.targets.get_target
         |
         v
-3. LIGAND PREPARATION  drugforge.chem.ligand
+3. LIGAND PREPARATION  valkyrie.chem.ligand
    protonate at pH 7.4 (Open Babel, falls back to the input SMILES on any
    failure) -> RDKit ETKDGv3 embed -> MMFF optimise -> Meeko -> PDBQT
         |
         v
-4. RECEPTOR PREPARATION drugforge.chem.receptor
+4. RECEPTOR PREPARATION valkyrie.chem.receptor
    download PDB from RCSB (cached) -> strip water/inhibitor, KEEP essential
    cofactors -> Open Babel PDBQT at pH 7.4, no Gasteiger charges -> guard
    against an empty receptor
         |
         v
-5. DOCK                drugforge.docking.engine.dock
+5. DOCK                valkyrie.docking.engine.dock
    AutoDock Vina, bounded CPU count -> DockingResult (affinity, pose PDBQT/SDF)
         |
         v
-6. RESCORE             drugforge.docking.rescoring.rescore_vinardo
+6. RESCORE             valkyrie.docking.rescoring.rescore_vinardo
    same pose, Vinardo scoring function (falls back to the Vina score if
    rescoring fails; never aborts the run)
         |
         v
-7. REFERENCE BASELINE  drugforge.pipeline.comparison.reference_baseline
+7. REFERENCE BASELINE  valkyrie.pipeline.comparison.reference_baseline
    dock the target's reference drug once per process, cache it
         |
         v
-8. CONSENSUS           drugforge.docking.consensus.compute_consensus
+8. CONSENSUS           valkyrie.docking.consensus.compute_consensus
    weighted, reference-normalised combination of Vina and Vinardo
         |
         v
-9. DRUG-LIKENESS       drugforge.chem.descriptors.compute_drug_likeness
+9. DRUG-LIKENESS       valkyrie.chem.descriptors.compute_drug_likeness
         |
         v
-10. ADMET FILTER       drugforge.chem.admet.compute_admet / evaluate_hit
+10. ADMET FILTER       valkyrie.chem.admet.compute_admet / evaluate_hit
         |
         v
-11. REFERENCE COMPARISON drugforge.pipeline.comparison.build_comparisons
+11. REFERENCE COMPARISON valkyrie.pipeline.comparison.build_comparisons
         |
         v
-12. AI EXPLANATION (optional) drugforge.ai.explainer.explain
+12. AI EXPLANATION (optional) valkyrie.ai.explainer.explain
     grounded in the computed result and, when the molecule matches an
     ethnobotanical library entry by canonical SMILES, its traditional use
         |
         v
-ScreeningResult -> persisted (drugforge.storage.repository) -> JSON response
+ScreeningResult -> persisted (valkyrie.storage.repository) -> JSON response
 ```
 
 Boltz-2 AI confirmation was designed as an additional optional stage but is not
@@ -136,7 +136,7 @@ nothing in the UI reads it.
 ## 3. Module Structure
 
 ```
-src/drugforge/
+src/valkyrie/
 ├── domain/
 │   ├── models.py         # ScreeningResult, Target, DockingBox, etc. Pure, no I/O.
 │   └── targets.py        # TARGETS registry, get_target
@@ -178,20 +178,20 @@ src/drugforge/
 
 ## 4. Error Handling Strategy
 
-### Exception hierarchy (`src/drugforge/errors.py`)
+### Exception hierarchy (`src/valkyrie/errors.py`)
 
 ```python
-class DrugForgeError(Exception): ...
-class ValidationError(DrugForgeError): ...
-class ResolutionError(DrugForgeError): ...
-class LigandPrepError(DrugForgeError): ...
-class ReceptorError(DrugForgeError): ...
-class DockingError(DrugForgeError): ...
-class TargetNotFoundError(DrugForgeError): ...
-class StorageError(DrugForgeError): ...
-class PipelineError(DrugForgeError):
+class ValkyrieError(Exception): ...
+class ValidationError(ValkyrieError): ...
+class ResolutionError(ValkyrieError): ...
+class LigandPrepError(ValkyrieError): ...
+class ReceptorError(ValkyrieError): ...
+class DockingError(ValkyrieError): ...
+class TargetNotFoundError(ValkyrieError): ...
+class StorageError(ValkyrieError): ...
+class PipelineError(ValkyrieError):
     stage: str
-    cause: DrugForgeError
+    cause: ValkyrieError
 ```
 
 ### Rules

@@ -21,7 +21,7 @@ Traces: REQ-OD-6, REQ-OD-8, REQ-OD-9, REQ-OD-10
 ---
 
 ## Task 2: Dataset module
-- [ ] Create `drugforge/dataset.py`:
+- [ ] Create `valkyrie/dataset.py`:
       - `SCHEMA` as the single source of truth (field, type, required, precision).
       - `LICENSE`, `DISCLAIMER` constants.
       - `build_dataset()` joining `ethnobotanical.json` with `docking_results`.
@@ -38,7 +38,7 @@ Traces: REQ-OD-1, REQ-OD-7, REQ-OD-8, REQ-OD-9
 
 ## Task 3: Store lookup helper
 - [ ] Add `get_results_by_molecule(smiles, target_id) -> dict | None` to
-      `drugforge/store.py`, returning the most recent result for a pair.
+      `valkyrie/store.py`, returning the most recent result for a pair.
 - [ ] Index or ordered query by `timestamp DESC LIMIT 1`.
 - [ ] Test: returns the latest result when several exist.
 
@@ -48,7 +48,7 @@ Traces: REQ-OD-1, REQ-OD-10
 
 ## Task 4: Build script
 - [ ] Create `scripts/build_dataset.py`:
-      - build -> validate -> write `data/dataset/drugforge.{json,csv}`.
+      - build -> validate -> write `data/dataset/valkyrie.{json,csv}`.
       - Print violations and exit non-zero on failure.
       - Print total / computed / pending counts.
       - `--output-dir` flag.
@@ -67,7 +67,7 @@ Traces: REQ-OD-7
 ---
 
 ## Task 6: API endpoints
-- [ ] Add to `drugforge/api.py`:
+- [ ] Add to `valkyrie/api.py`:
       - `GET /api/dataset` — query with `disease`, `target`, `plant`,
         `hit_only`, `limit` (default 100, max 1000); always returns metadata.
       - `GET /api/dataset/download?format=csv|json` — correct content type and

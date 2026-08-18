@@ -97,7 +97,7 @@ Stored in `data/benchmark_sets/external_selection.md` and echoed into the output
 JSON so readers can audit it:
 
 1. Source: a published, third-party curated redocking set (Astex Diverse Set
-   PDB ids) — chosen because it predates and is independent of DrugForge.
+   PDB ids) — chosen because it predates and is independent of Valkyrie.
 2. No complex is added or removed after results are seen.
 3. Every listed complex is attempted; failures are recorded as `skipped`.
 
@@ -140,7 +140,7 @@ committed **before** the first run.
 ## 4. Module and Script Layout
 
 ```
-drugforge/
+valkyrie/
 ├── benchmarks.py          # NEW: load artifacts, compute AUC/EF (pure functions)
 └── api.py                 # MODIFIED: GET /api/benchmarks
 scripts/
@@ -159,7 +159,7 @@ static/js/pages/
 └── benchmarks.js          # NEW: #/benchmarks page
 ```
 
-### `drugforge/benchmarks.py` public surface
+### `valkyrie/benchmarks.py` public surface
 ```python
 def compute_auc(active_scores: list[float], inactive_scores: list[float]) -> float
 def compute_ef(scores: list[tuple[float, bool]], fraction: float) -> float

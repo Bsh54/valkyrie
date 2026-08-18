@@ -2,7 +2,7 @@
 inclusion: always
 ---
 
-DrugForge PRIORITIZES candidate molecules; it does not discover or prove drugs and
+Valkyrie PRIORITIZES candidate molecules; it does not discover or prove drugs and
 never gives clinical advice. Never claim a molecule "cures" or "works" — only that it
 is an in-silico prediction to be validated in the lab. Docking is step one of many.
 Always surface honest scope, show controls and failed/skipped cases, cite sources.

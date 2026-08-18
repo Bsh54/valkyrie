@@ -25,7 +25,7 @@ Traces: REQ-RE-1, REQ-RE-4
 ---
 
 ## Task 3: Report generation module
-- [ ] Create `drugforge/report.py`:
+- [ ] Create `valkyrie/report.py`:
       - `render_molecule_image(smiles) -> bytes` — RDKit 2D depiction as PNG.
       - `generate_report(result: dict) -> bytes` — builds the full PDF:
         - Header with disclaimer banner
@@ -44,7 +44,7 @@ Traces: REQ-RE-2, REQ-RE-3, REQ-RE-5, REQ-RE-6
 ---
 
 ## Task 4: API endpoint
-- [ ] Add `GET /api/result/{id}/report` to `drugforge/api.py`:
+- [ ] Add `GET /api/result/{id}/report` to `valkyrie/api.py`:
       - Load result from store.
       - Call generate_report(result).
       - Return Response with content_type="application/pdf" and

@@ -1,5 +1,5 @@
 // Benchmarks. Bento visual style from
-// stitch_drugforge_molecular_docking_lab/drugforge_benchmarks, wired to the real
+// stitch_valkyrie_molecular_docking_lab/valkyrie_benchmarks, wired to the real
 // /api/benchmarks artifacts. Every number is real or an honest "not run" state;
 // nothing here is simulated and nothing triggers a docking run.
 const BenchmarksPage = {

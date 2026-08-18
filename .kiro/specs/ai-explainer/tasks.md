@@ -28,14 +28,14 @@ Traces: REQ-AE-1, REQ-AE-3, REQ-AE-4, REQ-AE-6, REQ-AE-7
       - Target mechanism (DHFR folate pathway)
       - Reference drug context (pyrimethamine, resistance)
       - Clinical context (what affinity threshold means, validation needed)
-- [ ] Add config constant `DISEASE_FACTS_DIR` to `drugforge/config.py`.
+- [ ] Add config constant `DISEASE_FACTS_DIR` to `valkyrie/config.py`.
 
 Traces: REQ-AE-7
 
 ---
 
 ## Task 3: Explainer module
-- [ ] Create `drugforge/explainer.py`:
+- [ ] Create `valkyrie/explainer.py`:
       - `SYSTEM_PROMPT` constant with grounding rules.
       - `build_prompt(result: dict, disease_facts: str) -> str` — template
         populated with real numbers from the result dict.
@@ -51,7 +51,7 @@ Traces: REQ-AE-1, REQ-AE-2, REQ-AE-3, REQ-AE-4, REQ-AE-5
 ---
 
 ## Task 4: Pipeline integration
-- [ ] Modify `drugforge/pipeline.py`:
+- [ ] Modify `valkyrie/pipeline.py`:
       - After all stages complete, call `generate_explanation()` if available.
       - Add `explanation: Explanation | None` to `PipelineResult`.
       - Non-blocking: if explainer fails, pipeline still returns valid result.

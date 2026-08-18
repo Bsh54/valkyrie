@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 import pytest
 
-from drugforge.chem.resolver import canonicalize, resolve
-from drugforge.chem.validator import validate_molecule
-from drugforge.errors import ResolutionError, ValidationError
+from valkyrie.chem.resolver import canonicalize, resolve
+from valkyrie.chem.validator import validate_molecule
+from valkyrie.errors import ResolutionError, ValidationError
 
 
 def test_curated_name_resolves():
@@ -33,14 +33,14 @@ def test_blank_input_is_rejected():
             resolve(value)
 
 
-@patch("drugforge.chem.resolver._lookup_pubchem", return_value=None)
+@patch("valkyrie.chem.resolver._lookup_pubchem", return_value=None)
 def test_unresolvable_input_raises(mock_lookup):
     with pytest.raises(ResolutionError):
         resolve("definitely_not_a_molecule_zzz")
     mock_lookup.assert_called_once()
 
 
-@patch("drugforge.chem.resolver._lookup_pubchem", return_value="CCO")
+@patch("valkyrie.chem.resolver._lookup_pubchem", return_value="CCO")
 def test_pubchem_is_the_last_resort(mock_lookup):
     assert resolve("some unknown trade name") == "CCO"
     mock_lookup.assert_called_once()
@@ -67,7 +67,7 @@ def test_validator_rejects_non_strings():
 )
 def test_validator_never_leaks_other_exceptions(value):
     with (
-        patch("drugforge.chem.resolver._lookup_pubchem", return_value=None),
+        patch("valkyrie.chem.resolver._lookup_pubchem", return_value=None),
         contextlib.suppress(ValidationError),
     ):
         validate_molecule(value)
