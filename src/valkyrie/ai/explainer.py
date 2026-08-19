@@ -182,6 +182,35 @@ def build_prompt(result: dict, target: Target, disease_facts: str) -> str:
     )
 
 
+# Primary model plus a fallback, so the explanation survives if a model id is ever
+# retired. deepseek-chat is fast and returns a clean answer; deepseek-v4-flash is the
+# listed successor and is only tried if the primary yields nothing.
+_FALLBACK_MODELS = ("deepseek-v4-flash",)
+
+
+def _request(model: str, prompt: str, api_key: str) -> str | None:
+    """One completion call. Returns the answer text, or None on any soft failure."""
+    response = requests.post(
+        DEEPSEEK_API_URL,
+        json={
+            "model": model,
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
+            "max_tokens": DEEPSEEK_MAX_TOKENS,
+            "temperature": 0.3,
+        },
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        timeout=DEEPSEEK_TIMEOUT_S,
+    )
+    if response.status_code != 200:
+        return None
+    choices = response.json()["choices"]
+    text = (choices[0]["message"].get("content") or "").strip()
+    return text or None
+
+
 def explain(result: dict, target: Target) -> Explanation:
     """Generate an explanation, degrading to a status when unavailable."""
     api_key = deepseek_api_key()
@@ -190,40 +219,22 @@ def explain(result: dict, target: Target) -> Explanation:
 
     prompt = build_prompt(result, target, load_disease_facts(target.id))
 
-    try:
-        response = requests.post(
-            DEEPSEEK_API_URL,
-            json={
-                "model": DEEPSEEK_MODEL,
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": prompt},
-                ],
-                "max_tokens": DEEPSEEK_MAX_TOKENS,
-                "temperature": 0.3,
-            },
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            timeout=DEEPSEEK_TIMEOUT_S,
-        )
-    except requests.Timeout:
-        return Explanation(status="error", error_detail="timeout")
-    except requests.ConnectionError:
-        return Explanation(status="error", error_detail="network_error")
-    except requests.RequestException as exc:
-        return Explanation(status="error", error_detail=type(exc).__name__)
+    models = [DEEPSEEK_MODEL] + [m for m in _FALLBACK_MODELS if m != DEEPSEEK_MODEL]
+    last_error = "no_model_succeeded"
+    for model in models:
+        try:
+            text = _request(model, prompt, api_key)
+        except requests.Timeout:
+            last_error = "timeout"
+            continue
+        except requests.RequestException as exc:
+            last_error = type(exc).__name__
+            continue
+        except (ValueError, KeyError, IndexError, AttributeError):
+            last_error = "invalid_response"
+            continue
+        if text:
+            return Explanation(text=text, status="success")
+        last_error = "empty_response"
 
-    if response.status_code != 200:
-        return Explanation(status="error", error_detail=f"http_{response.status_code}")
-
-    try:
-        choices = response.json().get("choices") or []
-        text = choices[0]["message"]["content"].strip()
-    except (ValueError, KeyError, IndexError, AttributeError):
-        return Explanation(status="error", error_detail="invalid_response")
-
-    if not text:
-        return Explanation(status="error", error_detail="empty_response")
-    return Explanation(text=text, status="success")
+    return Explanation(status="error", error_detail=last_error)

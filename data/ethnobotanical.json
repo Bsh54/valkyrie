@@ -88,5 +88,59 @@
       "part_used": "Stem bark, roots"
     },
     "source": "Abbah J et al. Antimalarial activity of Nauclea latifolia. J Ethnopharmacol 2010;131:61-67."
+  },
+  {
+    "id": "harmine",
+    "compound_name": "Harmine",
+    "smiles": "COc1ccc2c(c1)[nH]c1c(C)nccc12",
+    "plant": {
+      "scientific_name": "Peganum harmala",
+      "local_name": "Harmal",
+      "family": "Nitrariaceae"
+    },
+    "traditional_use": {
+      "disease": "Leishmaniasis, sleeping sickness",
+      "region": "North Africa, Sahel",
+      "people": "Maghreb and Saharan communities",
+      "preparation": "Seed powder and decoction",
+      "part_used": "Seeds"
+    },
+    "source": "Ethnobotanical use of Peganum harmala across North Africa; harmine reported to have in vitro antileishmanial and antitrypanosomal activity in the phytochemical literature."
+  },
+  {
+    "id": "thymoquinone",
+    "compound_name": "Thymoquinone",
+    "smiles": "CC1=CC(=O)C(C(C)C)=CC1=O",
+    "plant": {
+      "scientific_name": "Nigella sativa",
+      "local_name": "Black seed (Habbat al-barakah)",
+      "family": "Ranunculaceae"
+    },
+    "traditional_use": {
+      "disease": "Leishmaniasis",
+      "region": "North and East Africa",
+      "people": "Widespread traditional use",
+      "preparation": "Seed oil and ground seeds",
+      "part_used": "Seeds"
+    },
+    "source": "Nigella sativa is a staple of traditional medicine across North and East Africa; its main quinone thymoquinone has documented in vitro antileishmanial activity."
+  },
+  {
+    "id": "lapachol",
+    "compound_name": "Lapachol",
+    "smiles": "CC(C)=CCC1=C(O)C(=O)c2ccccc2C1=O",
+    "plant": {
+      "scientific_name": "Handroanthus impetiginosus",
+      "local_name": "Pau d'Arco (Lapacho)",
+      "family": "Bignoniaceae"
+    },
+    "traditional_use": {
+      "disease": "Chagas disease",
+      "region": "South America",
+      "people": "Traditional Amazonian and Andean medicine",
+      "preparation": "Inner bark decoction",
+      "part_used": "Inner bark"
+    },
+    "source": "Pau d'Arco bark is a long-standing South American traditional remedy; its naphthoquinone lapachol has reported in vitro trypanocidal activity against Trypanosoma cruzi. Origin noted honestly as non-African, matching the South American range of Chagas disease."
   }
 ]

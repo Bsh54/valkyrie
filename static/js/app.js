@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Router.register("/result/:resultId", (params) => LabPage.render(mountEl, params));
 
+    Router.register("/learn", () => LearnPage.render(mountEl));
     Router.register("/library", () => LibraryPage.render(mountEl));
     Router.register("/benchmarks", () => BenchmarksPage.render(mountEl));
 

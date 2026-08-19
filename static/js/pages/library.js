@@ -10,6 +10,9 @@ const LibraryPage = {
         "khaya-limonoid": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Jeune_ca%C3%AFlc%C3%A9drat.jpg/500px-Jeune_ca%C3%AFlc%C3%A9drat.jpg",
         reserpine: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rauvolfia_vomitoria-Jardin_botanique_Meise_%284%29.jpg/500px-Rauvolfia_vomitoria-Jardin_botanique_Meise_%284%29.jpg",
         strictosamide: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Nauclea_latifolia_.jpg/500px-Nauclea_latifolia_.jpg",
+        harmine: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Peganum_harmala_MHNT.BOT.2015.34.29.jpg/500px-Peganum_harmala_MHNT.BOT.2015.34.29.jpg",
+        thymoquinone: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Nigella_sativa_MHNT.BOT.2015.34.22.jpg/500px-Nigella_sativa_MHNT.BOT.2015.34.22.jpg",
+        lapachol: "https://commons.wikimedia.org/wiki/Special:FilePath/Handroanthus_impetiginosus.jpg?width=500",
     },
 
     async render(mountEl) {
@@ -20,6 +23,46 @@ const LibraryPage = {
             this.state.error = e.message;
         }
         this.paint();
+        if (!sessionStorage.getItem("valkyrie:tour-library") && !this.state.error) {
+            sessionStorage.setItem("valkyrie:tour-library", "1");
+            requestAnimationFrame(() => this.startTour());
+        }
+    },
+
+    // Interactive walkthrough of the library, launched from the Guide button and
+    // once automatically per session.
+    startTour() {
+        Tour.start([
+            {
+                title: "The plant library",
+                text: "This is the collection of traditional medicinal plants Valkyrie can screen. Every entry is real and cited.",
+            },
+            {
+                selector: "#library-search",
+                title: "Search",
+                text: "Look up a plant by its botanical name, its local name, the active compound, or even a SMILES string.",
+            },
+            {
+                selector: "#disease-filter",
+                title: "Filter by disease",
+                text: "Narrow the list to the plants traditionally used against a given disease.",
+            },
+            {
+                selector: "#library-grid > div",
+                title: "A plant, documented",
+                text: "Each card shows the plant, its active compound, the region and people who use it, the preparation, and the source it is cited from.",
+            },
+            {
+                selector: "[data-dock-smiles]",
+                title: "Send it to the lab",
+                text: "Click Dock this compound on any card to load that molecule straight into the lab and screen it against a disease target.",
+            },
+            {
+                selector: 'a[href="/api/dataset.csv"]',
+                title: "Open data",
+                text: "The whole library is downloadable as an open dataset, in CSV or JSON, for anyone to reuse. That is the end of the tour, enjoy.",
+            },
+        ]);
     },
 
     paint() {
@@ -95,6 +138,7 @@ const LibraryPage = {
             <h1 class="font-headline-md text-body-lg text-on-surface font-medium">Ethnobotanical Library</h1>
             <span class="font-code-md text-xs text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-full px-2.5 py-1">${this.state.compounds.length} compounds</span>`;
         const actions = `
+            <button onclick="LibraryPage.startTour()" class="inline-flex items-center gap-1.5 bg-surface-container-low border border-outline-variant text-on-surface px-3 py-1.5 rounded-lg font-body-sm text-body-sm hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[18px]">help</span> Guide</button>
             <a href="/api/dataset.csv" class="inline-flex items-center gap-1.5 bg-surface-container-low border border-outline-variant text-on-surface px-3 py-1.5 rounded-lg font-body-sm text-body-sm hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[18px]">download</span> Dataset (CSV)</a>
             <a href="/api/dataset" target="_blank" rel="noopener" class="inline-flex items-center px-2 py-1.5 font-body-sm text-body-sm text-on-surface-variant hover:text-primary">JSON</a>`;
         return `

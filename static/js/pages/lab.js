@@ -27,6 +27,12 @@ const LabPage = {
             await this.loadResult(params.resultId);
         } else {
             this.paint();
+            // Auto-start the walkthrough when landing on a fresh lab, once per
+            // browser session. The Guide button replays it anytime.
+            if (!sessionStorage.getItem("valkyrie:tour-lab") && !this.state.error) {
+                sessionStorage.setItem("valkyrie:tour-lab", "1");
+                requestAnimationFrame(() => this.startTour());
+            }
         }
     },
 
@@ -116,6 +122,52 @@ const LabPage = {
         window.addEventListener("beforeunload", beacon);
     },
 
+    // Interactive walkthrough of the lab. Mixes explanations with real actions
+    // (select a target, click a plant, press Run). Launched from the Guide button.
+    startTour() {
+        Tour.start([
+            {
+                title: "Welcome to the Lab",
+                text: "This is where a molecule is docked against a disease target for real. Let me walk you through it in a few steps.",
+            },
+            {
+                selector: "#target-select",
+                action: "change",
+                title: "1. Pick the disease target",
+                text: "Each target is a protein the parasite needs to survive. Blocking it is how a molecule fights the disease.",
+                hint: "pick a disease",
+            },
+            {
+                selector: "[data-compound-smiles]",
+                action: "click",
+                title: "2. Load a plant compound",
+                text: "Click one of these traditional plant compounds to drop it into the molecule field. You can also type a name or a SMILES string yourself.",
+                hint: "load a plant",
+            },
+            {
+                selector: "#molecule-input",
+                title: "The molecule to test",
+                text: "This is the candidate key we will try to fit into the target's pocket. It updates when you pick a plant, or you can edit it directly.",
+            },
+            {
+                selector: "#exhaustiveness-input",
+                title: "Search precision",
+                text: "How hard the engine searches for the best fit. 8 is a good default. Higher is slower but steadier.",
+            },
+            {
+                selector: "#run-docking-btn",
+                action: "click",
+                title: "3. Run the docking",
+                text: "Press Run to launch a real AutoDock Vina calculation. It takes about one to two minutes.",
+                hint: "start the docking",
+            },
+            {
+                title: "That's it",
+                text: "When it finishes, the result opens on its own: affinity score, comparison to the reference drug, drug-likeness, ADMET, a plain-language AI explanation and an interactive 3D pose. Enjoy exploring.",
+            },
+        ]);
+    },
+
     selectTarget(id) {
         this.state.activeTargetId = id;
         this.paint();
@@ -183,10 +235,12 @@ const LabPage = {
         const title = `
             <h1 class="font-headline-md text-body-lg text-on-surface font-medium">Docking Lab</h1>
             ${active ? `<span class="font-code-md text-xs text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-full px-2.5 py-1">${escapeHtml(active.name)} &middot; ${escapeHtml(active.pdb_id)}</span>` : ""}`;
-        const actions = r
+        const guide = `<button onclick="LabPage.startTour()" class="inline-flex items-center gap-1.5 bg-surface-container-low border border-outline-variant text-on-surface px-3 py-1.5 rounded-lg font-body-sm text-body-sm hover:bg-surface-container transition-colors">
+                <span class="material-symbols-outlined text-[18px]">help</span> Guide</button>`;
+        const actions = guide + (r
             ? `<a href="${API.reportUrl(r.result_id)}" class="inline-flex items-center gap-1.5 bg-surface-container-low border border-outline-variant text-on-surface px-3 py-1.5 rounded-lg font-body-sm text-body-sm hover:bg-surface-container transition-colors">
                 <span class="material-symbols-outlined text-[18px]">download</span> PDF</a>`
-            : "";
+            : "");
 
         return `
         ${AppShell.toolbar(title, actions)}

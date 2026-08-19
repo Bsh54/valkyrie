@@ -41,16 +41,18 @@ const HomePage = {
             <div class="z-10 max-w-3xl space-y-7">
                 <img src="/img/logo-mark.png" alt="Valkyrie" class="h-20 w-20 md:h-24 md:w-24 object-contain mx-auto" />
                 <h1 class="font-display text-[40px] md:text-[64px] leading-[1.05] text-on-surface tracking-tight">
-                    Find medicines for the diseases <span class="text-primary italic">the world forgot.</span>
+                    The plants already work. <span class="text-primary italic">We look for why.</span>
                 </h1>
                 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-                    Africa has healed with its plants for generations. Valkyrie gives that knowledge the
-                    molecular proof modern science asks for, screening real compounds against malaria,
-                    Chagas, leishmaniasis and sleeping sickness. Every score is in-silico, validated in the lab.
+                    African communities have healed with these plants for generations. Valkyrie searches for the
+                    molecular reason why, so the knowledge can leave the village and become a lead others can build on.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center pt-2">
                     <a data-link href="/lab" class="bg-primary text-on-primary font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-deep-navy transition-colors font-medium flex items-center justify-center gap-2 shadow-card">
                         Start Docking <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                    <a data-link href="/learn" class="bg-surface-container-lowest text-on-surface border border-outline-variant font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-surface-container-low transition-colors font-medium flex items-center justify-center gap-2">
+                        Learn the concepts <span class="material-symbols-outlined">school</span>
                     </a>
                     <a data-link href="/library" class="bg-surface-container-lowest text-on-surface border border-outline-variant font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-surface-container-low transition-colors font-medium flex items-center justify-center gap-2">
                         Explore the Library <span class="material-symbols-outlined">auto_stories</span>
@@ -127,7 +129,7 @@ const HomePage = {
         <section class="w-full bg-surface-container-low">
             <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="font-display text-[32px] md:text-[44px] leading-tight text-on-surface">From a molecule to a prioritised lead.</h2>
+                    <h2 class="font-display text-[32px] md:text-[44px] leading-tight text-on-surface">From a trusted plant to a documented reason.</h2>
                     <p class="font-body-md text-body-md text-on-surface-variant mt-3">One transparent pipeline, identical for every disease target. Nothing simulated.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -184,11 +186,13 @@ const HomePage = {
         <section class="w-full bg-deep-navy text-on-primary">
             <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 flex flex-col lg:flex-row items-center gap-12">
                 <div class="flex-1 space-y-5">
-                    <h2 class="font-display text-[32px] md:text-[46px] leading-tight">Traditional knowledge, molecular proof.</h2>
+                    <h2 class="font-display text-[32px] md:text-[46px] leading-tight">The knowledge came first.</h2>
                     <p class="font-body-lg text-body-lg text-primary-fixed-dim/90 max-w-xl">
-                        For generations, West African medicine has treated malaria with plants like
-                        Cryptolepis sanguinolenta. Valkyrie screens those compounds against validated
-                        disease targets, giving traditional knowledge a modern, cited, in-silico check.
+                        West African healers have treated malaria with plants like Cryptolepis sanguinolenta
+                        long before any laboratory could say why. Valkyrie looks for that missing reason, the
+                        exact grip a plant compound takes on the parasite, so the knowledge can leave the
+                        village, be cited, and reach the wider world. The same path quinine and artemisinin
+                        once walked.
                     </p>
                     <a data-link href="/library" class="inline-flex items-center gap-2 bg-surface-container-lowest text-primary font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-surface-container-low transition-colors font-medium mt-2">
                         Explore the library <span class="material-symbols-outlined">arrow_forward</span>
@@ -217,9 +221,9 @@ const HomePage = {
                 <span class="material-symbols-outlined text-primary text-[36px]" style="font-variation-settings:'FILL' 1;">balance</span>
                 <h2 class="font-display text-[28px] md:text-[38px] leading-tight text-on-surface mt-4 max-w-2xl mx-auto">Honest by design.</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant mt-3 max-w-2xl mx-auto">
-                    Valkyrie prioritises candidate molecules. It does not discover or prove drugs, and it
-                    never gives clinical advice. Docking is the first step of many, and every result waits
-                    for the laboratory.
+                    Valkyrie looks for a molecular reason and points to plant compounds worth a closer look. It
+                    does not discover or prove drugs, and it never gives clinical advice. Docking is a hypothesis,
+                    the first step of many, and every result waits for the laboratory.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                     <a data-link href="/lab" class="bg-primary text-on-primary font-body-md text-body-md px-6 py-3 rounded-xl hover:bg-deep-navy transition-colors font-medium">Start Docking</a>

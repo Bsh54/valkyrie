@@ -4,6 +4,7 @@ const Layout = {
         { href: "/lab", label: "Lab" },
         { href: "/library", label: "Library" },
         { href: "/benchmarks", label: "Benchmarks" },
+        { href: "/learn", label: "Learn" },
     ],
 
     header() {
@@ -75,7 +76,7 @@ const Layout = {
                             medicine and in-silico validation.
                         </p>
                     </div>
-                    ${col("Product", [link("/lab", "Docking Lab"), link("/library", "Ethnobotanical Library"), link("/benchmarks", "Benchmarks")])}
+                    ${col("Product", [link("/lab", "Docking Lab"), link("/library", "Ethnobotanical Library"), link("/benchmarks", "Benchmarks"), link("/learn", "Learn the concepts")])}
                     ${col("Open", [link("https://github.com/Bsh54/valkyrie", "GitHub", true), link("/api/dataset.csv", "Open dataset (CC-BY)", true), link("/benchmarks", "Validation")])}
                     ${col("Diseases", [link("/lab", "Malaria"), link("/lab", "Chagas disease"), link("/lab", "Leishmaniasis")])}
                 </div>
@@ -102,6 +103,7 @@ const AppShell = {
         { href: "/lab", icon: "labs", label: "Lab" },
         { href: "/library", icon: "local_florist", label: "Library" },
         { href: "/benchmarks", icon: "insights", label: "Benchmarks" },
+        { href: "/learn", icon: "school", label: "Learn" },
     ],
 
     rail() {

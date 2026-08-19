@@ -23,7 +23,7 @@ DESCRIPTION = (
 
 # Client-side routes rendered by the SPA shell. Each one serves index.html and
 # lets the router in app.js resolve the actual page from location.pathname.
-_SPA_ROUTES = ("/", "/lab", "/library", "/benchmarks", "/result/{result_id}")
+_SPA_ROUTES = ("/", "/lab", "/library", "/benchmarks", "/learn", "/result/{result_id}")
 
 
 def create_app() -> FastAPI:
