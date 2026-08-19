@@ -31,7 +31,7 @@ const Layout = {
                     <nav class="hidden md:flex gap-8 items-center h-16">${desktopLinks}</nav>
                 </div>
                 <div class="flex items-center gap-4">
-                    <a href="https://github.com" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md">
+                    <a href="https://github.com/Bsh54/valkyrie" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md">
                         <span class="material-symbols-outlined text-[20px]">code</span> GitHub
                     </a>
                     <a data-link href="/lab" class="hidden sm:inline-flex bg-primary text-on-primary font-body-md text-body-md px-4 py-2 rounded-xl hover:bg-deep-navy transition-colors font-medium">Start Docking</a>
@@ -76,7 +76,7 @@ const Layout = {
                         </p>
                     </div>
                     ${col("Product", [link("/lab", "Docking Lab"), link("/library", "Ethnobotanical Library"), link("/benchmarks", "Benchmarks")])}
-                    ${col("Open", [link("https://github.com", "GitHub", true), link("/library", "Open dataset (CC-BY)"), link("/benchmarks", "Validation")])}
+                    ${col("Open", [link("https://github.com/Bsh54/valkyrie", "GitHub", true), link("/api/dataset.csv", "Open dataset (CC-BY)", true), link("/benchmarks", "Validation")])}
                     ${col("Diseases", [link("/lab", "Malaria"), link("/lab", "Chagas disease"), link("/lab", "Leishmaniasis")])}
                 </div>
                 <div class="border-t border-outline-variant mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
@@ -122,7 +122,7 @@ const AppShell = {
             </a>
             <nav class="flex flex-col gap-1 p-3">${items}</nav>
             <div class="mt-auto p-3 border-t border-outline-variant flex flex-col gap-1">
-                <a href="https://github.com" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md">
+                <a href="https://github.com/Bsh54/valkyrie" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md">
                     <span class="material-symbols-outlined text-[20px]">code</span>GitHub
                 </a>
                 <a data-link href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-body-md text-body-md">

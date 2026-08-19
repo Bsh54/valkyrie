@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from valkyrie import __version__
 from valkyrie.config import STATIC_DIR, ensure_directories
 from valkyrie.domain.models import IN_SILICO_DISCLAIMER
-from valkyrie.web.routes import benchmarks, compounds, screening, targets
+from valkyrie.web.routes import benchmarks, compounds, dataset, screening, targets
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +35,7 @@ def create_app() -> FastAPI:
     app.include_router(screening.router)
     app.include_router(compounds.router)
     app.include_router(benchmarks.router)
+    app.include_router(dataset.router)
 
     @app.get("/api/health", tags=["meta"])
     def health() -> dict:

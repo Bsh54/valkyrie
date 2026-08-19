@@ -94,8 +94,11 @@ const LibraryPage = {
         const title = `
             <h1 class="font-headline-md text-body-lg text-on-surface font-medium">Ethnobotanical Library</h1>
             <span class="font-code-md text-xs text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-full px-2.5 py-1">${this.state.compounds.length} compounds</span>`;
+        const actions = `
+            <a href="/api/dataset.csv" class="inline-flex items-center gap-1.5 bg-surface-container-low border border-outline-variant text-on-surface px-3 py-1.5 rounded-lg font-body-sm text-body-sm hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-[18px]">download</span> Dataset (CSV)</a>
+            <a href="/api/dataset" target="_blank" rel="noopener" class="inline-flex items-center px-2 py-1.5 font-body-sm text-body-sm text-on-surface-variant hover:text-primary">JSON</a>`;
         return `
-        ${AppShell.toolbar(title)}
+        ${AppShell.toolbar(title, actions)}
         <div class="border-b border-outline-variant bg-surface px-5 py-4 flex flex-col md:flex-row gap-3 items-center">
             <div class="flex-1 relative w-full">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>

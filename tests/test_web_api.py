@@ -141,6 +141,18 @@ def test_cancel_route_reports_outcome(client):
     assert client.post("/api/jobs/absent/cancel").json() == {"job_id": "absent", "cancelled": False}
 
 
+def test_open_dataset_json_and_csv(client):
+    body = client.get("/api/dataset").json()
+    assert body["license"] == "CC-BY-4.0"
+    assert body["compounds"] and body["targets"]
+
+    csv_response = client.get("/api/dataset.csv")
+    assert csv_response.status_code == 200
+    assert "text/csv" in csv_response.headers["content-type"]
+    assert "attachment" in csv_response.headers["content-disposition"]
+    assert "smiles" in csv_response.text
+
+
 def test_request_validation_rejects_an_empty_molecule(client):
     response = client.post(
         "/api/screenings", json={"molecule": "", "target_id": "pf-dhfr"}
